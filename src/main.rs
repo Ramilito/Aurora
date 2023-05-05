@@ -1,10 +1,12 @@
 mod game;
 mod map;
 mod player;
+mod skymap;
 use bevy::prelude::*;
 
 use bevy_panorbit_camera::PanOrbitCameraPlugin;
 use game::InGamePlugin;
+use skymap::SkymapPlugin;
 
 #[derive(Resource)]
 struct BonusSpawnTimer(Timer);
@@ -23,9 +25,8 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_plugin(PanOrbitCameraPlugin)
-        // .add_plugin(MapPlugin)
+        .add_plugin(SkymapPlugin)
         .add_plugin(InGamePlugin)
-        // .add_plugin(bevy_flycam::PlayerPlugin)
         .add_plugin(player::PlayerPlugin)
         .run();
 }

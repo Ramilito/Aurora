@@ -1,6 +1,6 @@
-use bevy::{prelude::*, render::camera::ScalingMode};
+use bevy::prelude::*;
 use bevy_panorbit_camera::PanOrbitCamera;
-use std::f32::consts::{TAU, PI};
+use std::f32::consts::{PI, TAU};
 
 use crate::player::components::Player;
 
@@ -15,7 +15,6 @@ pub fn setup_game(
     //     material: materials.add(Color::rgb(0.3, 0.5, 0.3).into()),
     //     ..default()
     // });
-
     commands.spawn(SceneBundle {
         scene: asset_server.load("map/tower.glb#Scene0"),
         ..default()
@@ -63,6 +62,10 @@ pub fn setup_game(
             ..default()
         },
         ..default()
+    });
+    commands.insert_resource(AmbientLight {
+        color: Color::rgb_u8(210, 220, 240),
+        brightness: 1.0,
     });
 }
 
