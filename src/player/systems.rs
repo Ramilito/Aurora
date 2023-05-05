@@ -15,6 +15,7 @@ impl PlayerBundle {
         PlayerBundle {
             player: Player,
             scene_bundle: SceneBundle {
+                transform: Transform::from_xyz(3.0, 0.67, 0.0),
                 scene: asset_server.load("models/AlienCake/alien.glb#Scene0"),
                 ..default()
             },
