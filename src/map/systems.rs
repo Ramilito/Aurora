@@ -1,5 +1,5 @@
 use bevy::prelude::*;
 
-pub fn startup(mut commands: Commands, asset_server: Res<AssetServer>) {
+pub fn startup(mut commands: Commands) {
     commands.spawn(Camera2dBundle::default());
 }

@@ -1,12 +1,11 @@
+mod camera;
+mod collision;
 mod game;
 mod map;
 mod player;
 mod skymap;
-use bevy::prelude::*;
 
-use bevy_panorbit_camera::PanOrbitCameraPlugin;
-use game::InGamePlugin;
-use skymap::SkymapPlugin;
+use bevy::prelude::*;
 
 #[derive(Resource)]
 struct BonusSpawnTimer(Timer);
@@ -24,9 +23,9 @@ fn main() {
                 })
                 .set(ImagePlugin::default_nearest()),
         )
-        .add_plugin(PanOrbitCameraPlugin)
-        .add_plugin(SkymapPlugin)
-        .add_plugin(InGamePlugin)
+        .add_plugin(camera::CameraPlugin)
+        .add_plugin(collision::CollisionPlugin)
         .add_plugin(player::PlayerPlugin)
+        .add_plugin(game::InGamePlugin)
         .run();
 }

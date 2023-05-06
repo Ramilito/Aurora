@@ -2,9 +2,9 @@ use bevy::prelude::*;
 mod compontents;
 mod resources;
 mod systems;
-use systems::{setup};
+use systems::setup;
 
-use self::{systems::{asset_loaded}, compontents::CubemapMaterial};
+use self::{compontents::CubemapMaterial, systems::asset_loaded};
 pub struct SkymapPlugin;
 
 impl Plugin for SkymapPlugin {

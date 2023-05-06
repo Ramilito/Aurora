@@ -1,7 +1,8 @@
 use super::components::Player;
 use bevy::prelude::*;
+use bevy_rapier3d::prelude::{Collider, RigidBody};
 
-pub const PLAYER_SPEED: f32 = 10.0;
+pub const PLAYER_SPEED: f32 = 4.0;
 
 #[derive(Bundle)]
 pub struct PlayerBundle {
@@ -15,7 +16,7 @@ impl PlayerBundle {
         PlayerBundle {
             player: Player,
             scene_bundle: SceneBundle {
-                transform: Transform::from_xyz(3.0, 0.67, 0.0),
+                transform: Transform::from_xyz(3.0, 2.0, 0.0),
                 scene: asset_server.load("models/AlienCake/alien.glb#Scene0"),
                 ..default()
             },
@@ -24,7 +25,13 @@ impl PlayerBundle {
 }
 
 pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let _player_entity = commands.spawn(PlayerBundle::new(asset_server)).id();
+    let _player_entity = commands
+        .spawn(PlayerBundle::new(asset_server))
+        .insert(RigidBody::Dynamic)
+        .insert(Collider::cuboid(3.0, 3.0, 3.0))
+        // .insert(Restitution::coefficient(0.7))
+        .insert(TransformBundle::from(Transform::from_xyz(3.0, 4.0, 0.0)))
+        .id();
 }
 
 pub fn player_movement(

@@ -23,8 +23,6 @@ const CUBEMAPS: &[(&str, CompressedImageFormats)] = &[
 
 pub fn setup(
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
     asset_server: Res<AssetServer>,
 ) {
     let skybox_handle = asset_server.load(CUBEMAPS[0].0);
