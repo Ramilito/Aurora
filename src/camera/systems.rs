@@ -36,8 +36,8 @@ pub fn setup(mut commands: Commands) {
             // Allow the camera to go upside down
             allow_upside_down: true,
             // Blender-like key bindings
-            button_orbit: MouseButton::Middle,
-            button_pan: MouseButton::Middle,
+            button_orbit: MouseButton::Left,
+            button_pan: MouseButton::Left,
             modifier_pan: Some(KeyCode::LShift),
             // Reverse the zoom direction
             reversed_zoom: true,
