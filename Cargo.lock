@@ -242,6 +242,7 @@ name = "aurora"
 version = "0.1.0"
 dependencies = [
  "bevy",
+ "bevy_asset_loader",
  "bevy_flycam",
  "bevy_panorbit_camera",
  "bevy_rapier3d",
@@ -354,6 +355,28 @@ dependencies = [
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",
+]
+
+[[package]]
+name = "bevy_asset_loader"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f32463c4be049c9535661f2debcd76a6ee7fc5c0e0c2335214bda671607ae7d9"
+dependencies = [
+ "anyhow",
+ "bevy",
+ "bevy_asset_loader_derive",
+]
+
+[[package]]
+name = "bevy_asset_loader_derive"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2921646f30d11ae14b85e4957242dcb98c37b748987b00b84473fcd390c561dd"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
 ]
 
 [[package]]
