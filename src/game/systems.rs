@@ -2,10 +2,6 @@ use bevy::prelude::*;
 
 pub fn setup_game(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(SceneBundle {
-        scene: asset_server.load("map/tower.glb#Scene0"),
-        ..default()
-    });
-    commands.spawn(SceneBundle {
         scene: asset_server.load("map/clouds_skybox.glb#Scene0"),
         ..default()
     });
