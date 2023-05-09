@@ -16,7 +16,7 @@ impl PlayerBundle {
         PlayerBundle {
             player: Player,
             scene_bundle: SceneBundle {
-                transform: Transform::from_xyz(3.0, 2.0, 0.0),
+                transform: Transform::from_xyz(-2.0, -2.0, 0.0),
                 scene: asset_server.load("models/AlienCake/alien.glb#Scene0"),
                 ..default()
             },
@@ -28,9 +28,8 @@ pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     let _player_entity = commands
         .spawn(PlayerBundle::new(asset_server))
         .insert(RigidBody::Dynamic)
-        .insert(Collider::cuboid(3.0, 3.0, 3.0))
-        // .insert(Restitution::coefficient(0.7))
-        .insert(TransformBundle::from(Transform::from_xyz(3.0, 4.0, 0.0)))
+        .insert(Collider::cuboid(0.5, 0.5, 0.5))
+        .insert(TransformBundle::from(Transform::from_xyz(3.0, 6.0, 0.0)))
         .id();
 }
 
