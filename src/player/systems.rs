@@ -1,6 +1,8 @@
+use crate::components::MyAssets;
+
 use super::components::Player;
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::{Collider, Dominance, RigidBody, Restitution};
+use bevy_rapier3d::prelude::{Collider, RigidBody};
 
 pub const PLAYER_SPEED: f32 = 10.0;
 
@@ -12,27 +14,22 @@ pub struct PlayerBundle {
 }
 
 impl PlayerBundle {
-    pub fn new(asset_server: Res<AssetServer>) -> Self {
+    pub fn new(scene: Handle<Scene>) -> Self {
         PlayerBundle {
             player: Player,
-            scene_bundle: SceneBundle {
-                transform: Transform::from_xyz(-2.0, -2.0, 0.0),
-                scene: asset_server.load("models/AlienCake/alien.glb#Scene0"),
-                ..default()
-            },
+            scene_bundle: SceneBundle { scene, ..default() },
         }
     }
 }
 
-pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let _player_entity = commands
-        .spawn(RigidBody::Dynamic)
-        .insert(PlayerBundle::new(asset_server))
-        .insert(Dominance::group(100))
-        .insert(Restitution::coefficient(0.0))
-        .insert(Collider::cuboid(0.5, 0.5, 0.5))
-        .insert(TransformBundle::from(Transform::from_xyz(3.0, 6.0, 0.0)))
-        .id();
+pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
+    commands
+        .spawn(PlayerBundle::new(_my_assets.player.clone()))
+        .insert(Collider::cuboid(0.25, 0.4, 0.2))
+        .insert(RigidBody::Dynamic)
+        // .insert(Restitution::coefficient(0.0))
+        // .insert(Dominance::group(0))
+        .insert(TransformBundle::from(Transform::from_xyz(3.0, 6.0, 0.0)));
 }
 
 pub fn player_movement(
