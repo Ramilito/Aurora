@@ -1,8 +1,8 @@
 use super::components::Player;
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::{Collider, RigidBody};
+use bevy_rapier3d::prelude::{Collider, Dominance, RigidBody, Restitution};
 
-pub const PLAYER_SPEED: f32 = 4.0;
+pub const PLAYER_SPEED: f32 = 10.0;
 
 #[derive(Bundle)]
 pub struct PlayerBundle {
@@ -26,8 +26,10 @@ impl PlayerBundle {
 
 pub fn spawn_player(mut commands: Commands, asset_server: Res<AssetServer>) {
     let _player_entity = commands
-        .spawn(PlayerBundle::new(asset_server))
-        .insert(RigidBody::Dynamic)
+        .spawn(RigidBody::Dynamic)
+        .insert(PlayerBundle::new(asset_server))
+        .insert(Dominance::group(100))
+        .insert(Restitution::coefficient(0.0))
         .insert(Collider::cuboid(0.5, 0.5, 0.5))
         .insert(TransformBundle::from(Transform::from_xyz(3.0, 6.0, 0.0)))
         .id();
