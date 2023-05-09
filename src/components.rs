@@ -1,8 +1,24 @@
-use bevy::prelude::States;
+use bevy::prelude::*;
+use bevy_asset_loader::prelude::AssetCollection;
 
 #[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
 pub enum AppState {
     #[default]
     AssetLoading,
     InGame,
+}
+#[derive(AssetCollection, Resource)]
+pub struct MyAssets {
+    #[asset(path = "map/tower.gltf#Scene0")]
+    pub tower: Handle<Scene>,
+
+    #[asset(path = "map/tower.gltf#Mesh0/Primitive0")]
+    pub tower_mesh: Handle<Mesh>,
+
+    #[asset(path = "models/AlienCake/alien.gltf#Scene0")]
+    pub player: Handle<Scene>,
+
+    #[asset(path = "models/AlienCake/alien.gltf#Mesh0/Primitive0")]
+    pub player_mesh: Handle<Mesh>,
+
 }
