@@ -7,6 +7,7 @@ pub enum AppState {
     AssetLoading,
     InGame,
 }
+
 #[derive(AssetCollection, Resource)]
 pub struct MyAssets {
     #[asset(path = "map/tower.gltf#Scene0")]

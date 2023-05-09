@@ -1,7 +1,7 @@
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::{Collider, ComputedColliderShape, RigidBody, Restitution, Dominance};
+use bevy_rapier3d::prelude::{Collider, ComputedColliderShape, Dominance, Restitution, RigidBody};
 
-use super::components::MyAssets;
+use crate::components::MyAssets;
 
 pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(SceneBundle {
@@ -62,7 +62,5 @@ pub fn load_assets(
                         (0.0_f32).to_radians(),
                     )),
             ));
-    } else {
-        info!("sphere hasn't loaded yet");
     }
 }

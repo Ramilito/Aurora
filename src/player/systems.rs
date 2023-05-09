@@ -22,7 +22,10 @@ impl PlayerBundle {
     }
 }
 
-pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
+pub fn load_assets(
+    _my_assets: Res<MyAssets>,
+    mut commands: Commands,
+) {
     commands
         .spawn(PlayerBundle::new(_my_assets.player.clone()))
         .insert(Collider::cuboid(0.25, 0.4, 0.2))
