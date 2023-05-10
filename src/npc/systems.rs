@@ -32,10 +32,10 @@ pub fn setup(asset_server: Res<AssetServer>, mut commands: Commands) {
 pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
     commands
         .spawn(NpcBundle::new(_my_assets.npc_emo.clone()))
-        .insert(Collider::cuboid(0.4, 1.0, 0.8))
+        .insert(Collider::cuboid(0.3, 1.0, 0.6))
         .insert(RigidBody::Dynamic)
         .insert(TransformBundle::from(
-            Transform::from_xyz(0.0, 1.0, 16.0).with_scale(Vec3::new(0.5, 0.5, 0.5)),
+            Transform::from_xyz(0.0, 1.0, 16.0).with_scale(Vec3::new(0.7, 0.7, 0.7)),
         ));
 }
 
