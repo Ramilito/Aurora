@@ -22,4 +22,6 @@ pub struct MyAssets {
     #[asset(path = "models/AlienCake/alien.gltf#Mesh0/Primitive0")]
     pub player_mesh: Handle<Mesh>,
 
+    #[asset(path = "models/animated/npc_emo.gltf#Scene0")]
+    pub npc_emo: Handle<Scene>,
 }
