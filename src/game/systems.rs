@@ -53,7 +53,7 @@ pub fn load_assets(
             .insert(Restitution::coefficient(0.0))
             .insert(Dominance::group(0))
             .insert(TransformBundle::from(
-                Transform::from_xyz(0.0, -3.0, 0.0)
+                Transform::from_xyz(0.0, 0.0, 0.0)
                     .with_scale(Vec3::new(0.5, 0.5, 0.5))
                     .with_rotation(Quat::from_euler(
                         EulerRot::XYZ,
@@ -64,3 +64,4 @@ pub fn load_assets(
             ));
     }
 }
+
