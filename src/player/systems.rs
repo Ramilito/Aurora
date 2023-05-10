@@ -4,7 +4,7 @@ use super::components::Player;
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::{Collider, RigidBody};
 
-pub const PLAYER_SPEED: f32 = 10.0;
+pub const PLAYER_SPEED: f32 = 3.0;
 
 #[derive(Bundle)]
 pub struct PlayerBundle {
@@ -22,10 +22,7 @@ impl PlayerBundle {
     }
 }
 
-pub fn load_assets(
-    _my_assets: Res<MyAssets>,
-    mut commands: Commands,
-) {
+pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
     commands
         .spawn(PlayerBundle::new(_my_assets.player.clone()))
         .insert(Collider::cuboid(0.25, 0.4, 0.2))
