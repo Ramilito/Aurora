@@ -32,7 +32,7 @@ pub fn load_assets(
         .insert(RigidBody::Dynamic)
         // .insert(Restitution::coefficient(0.0))
         // .insert(Dominance::group(0))
-        .insert(TransformBundle::from(Transform::from_xyz(3.0, 6.0, 0.0)));
+        .insert(TransformBundle::from(Transform::from_xyz(0.0, 2.0, 18.0)));
 }
 
 pub fn player_movement(
