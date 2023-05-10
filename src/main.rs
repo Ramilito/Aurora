@@ -4,6 +4,7 @@ mod components;
 mod game;
 mod map;
 mod player;
+mod npc;
 mod skymap;
 
 use bevy::prelude::*;
@@ -30,7 +31,8 @@ fn main() {
         .add_collection_to_loading_state::<_, MyAssets>(AppState::AssetLoading)
         .add_plugin(camera::CameraPlugin)
         .add_plugin(collision::CollisionPlugin)
-        .add_plugin(player::PlayerPlugin)
         .add_plugin(game::InGamePlugin)
+        .add_plugin(player::PlayerPlugin)
+        .add_plugin(npc::NpcPlugin)
         .run();
 }
