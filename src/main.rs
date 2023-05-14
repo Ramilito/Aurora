@@ -3,8 +3,8 @@ mod collision;
 mod components;
 mod game;
 mod map;
-mod player;
 mod npc;
+mod player;
 mod skymap;
 
 use bevy::prelude::*;
