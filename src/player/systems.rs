@@ -2,7 +2,7 @@ use crate::components::MyAssets;
 
 use super::components::Player;
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::{Collider, RigidBody};
+use bevy_rapier3d::prelude::{Collider, RigidBody, Dominance};
 
 pub const PLAYER_SPEED: f32 = 3.0;
 
@@ -28,7 +28,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
         .insert(Collider::cuboid(0.25, 0.4, 0.2))
         .insert(RigidBody::Dynamic)
         // .insert(Restitution::coefficient(0.0))
-        // .insert(Dominance::group(0))
+        .insert(Dominance::group(10))
         .insert(TransformBundle::from(Transform::from_xyz(0.0, 2.0, 18.0)));
 }
 

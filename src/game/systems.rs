@@ -1,13 +1,16 @@
-use bevy::prelude::*;
+use bevy::{
+    gltf::{Gltf, GltfMesh},
+    prelude::*,
+};
 use bevy_rapier3d::prelude::{Collider, ComputedColliderShape, Dominance, Restitution, RigidBody};
 
 use crate::components::MyAssets;
 
 pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(SceneBundle {
-        scene: asset_server.load("map/clouds_skybox.glb#Scene0"),
-        ..default()
-    });
+    // commands.spawn(SceneBundle {
+    //     scene: asset_server.load("map/clouds_skybox.glb#Scene0"),
+    //     ..default()
+    // });
 
     commands.spawn(PointLightBundle {
         transform: Transform::from_xyz(0.0, 3.0, 0.0),
@@ -42,18 +45,29 @@ pub fn load_assets(
     mut commands: Commands,
     meshes: ResMut<Assets<Mesh>>,
     asset_server: Res<AssetServer>,
+    asset_gltf: Res<Assets<Gltf>>,
+    assets_gltfmesh: Res<Assets<GltfMesh>>,
 ) {
-    if let Some(tower) = meshes.get(&_my_assets.tower_mesh) {
-        let m = Collider::from_bevy_mesh(tower, &ComputedColliderShape::TriMesh).unwrap();
+    if let Some(tower) = asset_gltf.get(&_my_assets.tower_gltf) {
+        let ground = assets_gltfmesh.get(&tower.named_meshes["ground_top"]).clone().unwrap();
+        let castle = assets_gltfmesh.get(&tower.named_meshes["castle"]).clone().unwrap();
+
+        let ground_collider = Collider::from_bevy_mesh(
+            meshes.get(&ground.primitives[0].mesh.clone()).unwrap(),
+            &ComputedColliderShape::TriMesh,
+        )
+        .unwrap();
+        let castle_collider = Collider::from_bevy_mesh(
+            meshes.get(&castle.primitives[0].mesh.clone()).unwrap(),
+            &ComputedColliderShape::TriMesh,
+        )
+        .unwrap();
+
         commands
             .spawn(SceneBundle {
-                scene: _my_assets.tower.clone(),
+                scene: tower.scenes[0].clone(),
                 ..default()
             })
-            .insert(m)
-            .insert(RigidBody::Fixed)
-            .insert(Restitution::coefficient(0.0))
-            .insert(Dominance::group(0))
             .insert(TransformBundle::from(
                 Transform::from_xyz(0.0, 0.0, 0.0)
                     .with_scale(Vec3::new(0.5, 0.5, 0.5))
@@ -64,6 +78,26 @@ pub fn load_assets(
                         (0.0_f32).to_radians(),
                     )),
             ));
+        commands
+            .spawn(RigidBody::Fixed)
+            .insert(Restitution::coefficient(0.0))
+            .insert(Dominance::group(0))
+            .insert(TransformBundle::from(
+                Transform::from_xyz(0.0, 0.0, 0.0).with_rotation(Quat::from_euler(
+                    EulerRot::XYZ,
+                    (-90.0_f32).to_radians(),
+                    (0.0_f32).to_radians(),
+                    (0.0_f32).to_radians(),
+                )),
+            ))
+            .with_children(|children| {
+                children.spawn(ground_collider).insert(TransformBundle::from(
+                    Transform::from_scale(Vec3::splat(0.5)),
+                ));
+                children.spawn(castle_collider).insert(TransformBundle::from(
+                    Transform::from_scale(Vec3::splat(0.5)),
+                ));
+            });
 
         commands
             .spawn(SceneBundle {
@@ -73,7 +107,25 @@ pub fn load_assets(
             // .insert(Collider::cuboid(0.25, 0.4, 0.2))
             // .insert(RigidBody::Dynamic)
             .insert(TransformBundle::from(
-                Transform::from_xyz(0.0, 2.5, 0.0), // .with_scale(Vec3::new(0.2, 0.2, 0.2)),
+                Transform::from_xyz(0.0, 2.5, 0.5), // .with_scale(Vec3::new(0.2, 0.2, 0.2)),
             ));
     }
 }
+
+// #[derive(Resource)]
+// struct ScenesEntities(Vec<Entity>);
+//
+// fn add_colliders(
+//    mut scene_entities : ResMut<ScenesEntities>,
+//    children : Query<&Children>,
+//    has_mesh : Query<(&Transform, &Handle<Mesh>)>,
+// ) {
+//     for &scene in &scene_entities.0 {
+//        for descendant in children.iter_descendants(scene) {
+//             if let Ok((_transform, mesh)) = has_mesh.get(descendant) {
+//                 println!("add collider with {:#?}", mesh);
+//            }
+//        }
+//    }
+//    // scene_entities.0.clear();
+// }
