@@ -1,4 +1,4 @@
-use bevy::prelude::{Resource, Handle, Image};
+use bevy::prelude::{Handle, Image, Resource};
 
 #[derive(Resource)]
 pub struct Cubemap {
@@ -6,4 +6,3 @@ pub struct Cubemap {
     pub index: usize,
     pub image_handle: Handle<Image>,
 }
-

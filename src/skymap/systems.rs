@@ -1,6 +1,13 @@
-use bevy::{render::{texture::CompressedImageFormats, render_resource::{TextureViewDescriptor, TextureViewDimension}}, prelude::*, asset::LoadState};
+use bevy::{
+    asset::LoadState,
+    prelude::*,
+    render::{
+        render_resource::{TextureViewDescriptor, TextureViewDimension},
+        texture::CompressedImageFormats,
+    },
+};
 
-use super::{resources::Cubemap, compontents::CubemapMaterial};
+use super::{compontents::CubemapMaterial, resources::Cubemap};
 
 const CUBEMAPS: &[(&str, CompressedImageFormats)] = &[
     (
@@ -21,10 +28,7 @@ const CUBEMAPS: &[(&str, CompressedImageFormats)] = &[
     ),
 ];
 
-pub fn setup(
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
+pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let skybox_handle = asset_server.load(CUBEMAPS[0].0);
     commands.insert_resource(Cubemap {
         is_loaded: false,
