@@ -1,4 +1,21 @@
-use bevy::{reflect::TypeUuid, prelude::{Handle, Image, Material}, render::{render_resource::{ShaderRef, RenderPipelineDescriptor, SpecializedMeshPipelineError, AsBindGroup, BindGroupLayout, PreparedBindGroup, AsBindGroupError, BindGroupEntry, BindingResource, BindGroupDescriptor, ShaderStages, BindingType, SamplerBindingType, BindGroupLayoutEntry, TextureViewDimension, TextureSampleType, BindGroupLayoutDescriptor, OwnedBindingResource}, mesh::MeshVertexBufferLayout, renderer::RenderDevice, render_asset::RenderAssets, texture::FallbackImage}, pbr::{MaterialPipeline, MaterialPipelineKey}};
+use bevy::{
+    pbr::{MaterialPipeline, MaterialPipelineKey},
+    prelude::{Handle, Image, Material},
+    reflect::TypeUuid,
+    render::{
+        mesh::MeshVertexBufferLayout,
+        render_asset::RenderAssets,
+        render_resource::{
+            AsBindGroup, AsBindGroupError, BindGroupDescriptor, BindGroupEntry, BindGroupLayout,
+            BindGroupLayoutDescriptor, BindGroupLayoutEntry, BindingResource, BindingType,
+            OwnedBindingResource, PreparedBindGroup, RenderPipelineDescriptor, SamplerBindingType,
+            ShaderRef, ShaderStages, SpecializedMeshPipelineError, TextureSampleType,
+            TextureViewDimension,
+        },
+        renderer::RenderDevice,
+        texture::FallbackImage,
+    },
+};
 
 #[derive(Debug, Clone, TypeUuid)]
 #[uuid = "9509a0f8-3c05-48ee-a13e-a93226c7f488"]
