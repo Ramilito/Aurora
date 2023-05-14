@@ -3,7 +3,7 @@ use bevy::prelude::*;
 pub mod components;
 mod systems;
 
-use systems::{player_movement, load_assets};
+use systems::{load_assets, player_movement};
 
 use crate::components::AppState;
 

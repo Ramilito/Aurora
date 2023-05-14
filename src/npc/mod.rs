@@ -7,7 +7,7 @@ use systems::load_assets;
 
 use crate::components::AppState;
 
-use self::systems::{setup_scene_once_loaded, setup};
+use self::systems::{setup, setup_scene_once_loaded};
 
 pub struct NpcPlugin;
 
