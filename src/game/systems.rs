@@ -48,34 +48,48 @@ pub fn load_assets(
     asset_gltf: Res<Assets<Gltf>>,
     assets_gltfmesh: Res<Assets<GltfMesh>>,
 ) {
+    commands
+        .spawn(SceneBundle {
+            scene: asset_server.load("models/sword.gltf#Scene0"),
+            ..default()
+        })
+        // .insert(Collider::cuboid(0.25, 0.4, 0.2))
+        // .insert(RigidBody::Dynamic)
+        .insert(TransformBundle::from(
+            Transform::from_xyz(0.0, 2.5, 0.5), // .with_scale(Vec3::new(0.2, 0.2, 0.2)),
+        ));
+    load_map(_my_assets, commands, meshes, asset_gltf, assets_gltfmesh);
+}
+
+fn load_map(
+    _my_assets: Res<MyAssets>,
+    mut commands: Commands,
+    meshes: ResMut<Assets<Mesh>>,
+    asset_gltf: Res<Assets<Gltf>>,
+    assets_gltfmesh: Res<Assets<GltfMesh>>,
+) {
     if let Some(tower) = asset_gltf.get(&_my_assets.tower_gltf) {
+        let commons = TransformBundle::from(
+            Transform::from_xyz(0.0, 0.0, 0.0).with_scale(Vec3::new(0.5, 0.5, 0.5)).with_rotation(
+                Quat::from_euler(
+                    EulerRot::XYZ,
+                    (-90.0_f32).to_radians(),
+                    (0.0_f32).to_radians(),
+                    (0.0_f32).to_radians(),
+                ),
+            ),
+        );
         commands
             .spawn(SceneBundle {
                 scene: tower.scenes[0].clone(),
                 ..default()
             })
-            .insert(TransformBundle::from(
-                Transform::from_xyz(0.0, 0.0, 0.0)
-                    .with_scale(Vec3::new(0.5, 0.5, 0.5))
-                    .with_rotation(Quat::from_euler(
-                        EulerRot::XYZ,
-                        (-90.0_f32).to_radians(),
-                        (0.0_f32).to_radians(),
-                        (0.0_f32).to_radians(),
-                    )),
-            ));
+            .insert(commons);
         commands
             .spawn(RigidBody::Fixed)
             .insert(Restitution::coefficient(0.0))
             .insert(Dominance::group(0))
-            .insert(TransformBundle::from(
-                Transform::from_xyz(0.0, 0.0, 0.0).with_rotation(Quat::from_euler(
-                    EulerRot::XYZ,
-                    (-90.0_f32).to_radians(),
-                    (0.0_f32).to_radians(),
-                    (0.0_f32).to_radians(),
-                )),
-            ))
+            .insert(commons)
             .with_children(|children| {
                 for mesh_handle in tower.named_meshes.iter() {
                     let (name, gltf_mesh) = mesh_handle;
@@ -90,23 +104,9 @@ pub fn load_assets(
                     )
                     .unwrap();
 
-                    children.spawn(collider).insert(TransformBundle::from(Transform::from_scale(
-                        Vec3::splat(0.5),
-                    )));
+                    children.spawn(collider).insert(TransformBundle::from(Transform::default()));
                 }
                 children.spawn(RigidBody::Fixed);
             });
-
-        commands
-            .spawn(SceneBundle {
-                scene: asset_server.load("models/sword.gltf#Scene0"),
-                ..default()
-            })
-            // .insert(Collider::cuboid(0.25, 0.4, 0.2))
-            // .insert(RigidBody::Dynamic)
-            .insert(TransformBundle::from(
-                Transform::from_xyz(0.0, 2.5, 0.5), // .with_scale(Vec3::new(0.2, 0.2, 0.2)),
-            ));
     }
 }
-
