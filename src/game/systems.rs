@@ -49,20 +49,6 @@ pub fn load_assets(
     assets_gltfmesh: Res<Assets<GltfMesh>>,
 ) {
     if let Some(tower) = asset_gltf.get(&_my_assets.tower_gltf) {
-        let ground = assets_gltfmesh.get(&tower.named_meshes["ground_top"]).clone().unwrap();
-        let castle = assets_gltfmesh.get(&tower.named_meshes["castle"]).clone().unwrap();
-
-        let ground_collider = Collider::from_bevy_mesh(
-            meshes.get(&ground.primitives[0].mesh.clone()).unwrap(),
-            &ComputedColliderShape::TriMesh,
-        )
-        .unwrap();
-        let castle_collider = Collider::from_bevy_mesh(
-            meshes.get(&castle.primitives[0].mesh.clone()).unwrap(),
-            &ComputedColliderShape::TriMesh,
-        )
-        .unwrap();
-
         commands
             .spawn(SceneBundle {
                 scene: tower.scenes[0].clone(),
@@ -91,12 +77,24 @@ pub fn load_assets(
                 )),
             ))
             .with_children(|children| {
-                children.spawn(ground_collider).insert(TransformBundle::from(
-                    Transform::from_scale(Vec3::splat(0.5)),
-                ));
-                children.spawn(castle_collider).insert(TransformBundle::from(
-                    Transform::from_scale(Vec3::splat(0.5)),
-                ));
+                for mesh_handle in tower.named_meshes.iter() {
+                    let (name, gltf_mesh) = mesh_handle;
+                    if !name.contains("collider") {
+                        continue;
+                    }
+
+                    let mesh = assets_gltfmesh.get(gltf_mesh).clone().unwrap();
+                    let collider = Collider::from_bevy_mesh(
+                        meshes.get(&mesh.primitives[0].mesh.clone()).unwrap(),
+                        &ComputedColliderShape::TriMesh,
+                    )
+                    .unwrap();
+
+                    children.spawn(collider).insert(TransformBundle::from(Transform::from_scale(
+                        Vec3::splat(0.5),
+                    )));
+                }
+                children.spawn(RigidBody::Fixed);
             });
 
         commands
@@ -112,20 +110,3 @@ pub fn load_assets(
     }
 }
 
-// #[derive(Resource)]
-// struct ScenesEntities(Vec<Entity>);
-//
-// fn add_colliders(
-//    mut scene_entities : ResMut<ScenesEntities>,
-//    children : Query<&Children>,
-//    has_mesh : Query<(&Transform, &Handle<Mesh>)>,
-// ) {
-//     for &scene in &scene_entities.0 {
-//        for descendant in children.iter_descendants(scene) {
-//             if let Ok((_transform, mesh)) = has_mesh.get(descendant) {
-//                 println!("add collider with {:#?}", mesh);
-//            }
-//        }
-//    }
-//    // scene_entities.0.clear();
-// }
