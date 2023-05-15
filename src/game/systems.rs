@@ -56,7 +56,7 @@ pub fn load_assets(
         // .insert(Collider::cuboid(0.25, 0.4, 0.2))
         // .insert(RigidBody::Dynamic)
         .insert(TransformBundle::from(
-            Transform::from_xyz(0.0, 2.5, 0.5), // .with_scale(Vec3::new(0.2, 0.2, 0.2)),
+            Transform::from_xyz(0.0, 2.5, 0.5), 
         ));
     load_map(_my_assets, commands, meshes, asset_gltf, assets_gltfmesh);
 }
