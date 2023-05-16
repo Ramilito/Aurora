@@ -55,9 +55,7 @@ pub fn load_assets(
         })
         // .insert(Collider::cuboid(0.25, 0.4, 0.2))
         // .insert(RigidBody::Dynamic)
-        .insert(TransformBundle::from(
-            Transform::from_xyz(0.0, 2.5, 0.5), 
-        ));
+        .insert(TransformBundle::from(Transform::from_xyz(0.0, 2.5, 0.5)));
     load_map(_my_assets, commands, meshes, asset_gltf, assets_gltfmesh);
 }
 
@@ -88,7 +86,7 @@ fn load_map(
         commands
             .spawn(RigidBody::Fixed)
             .insert(Restitution::coefficient(0.0))
-            .insert(Dominance::group(0))
+            .insert(Dominance::group(1))
             .insert(commons)
             .with_children(|children| {
                 for mesh_handle in tower.named_meshes.iter() {
@@ -104,7 +102,11 @@ fn load_map(
                     )
                     .unwrap();
 
-                    children.spawn(collider).insert(TransformBundle::from(Transform::default()));
+                    children
+                        .spawn(collider)
+                        .insert(Dominance::group(1))
+                        .insert(Restitution::coefficient(0.0))
+                        .insert(TransformBundle::from(Transform::default()));
                 }
                 children.spawn(RigidBody::Fixed);
             });
