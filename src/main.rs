@@ -9,6 +9,7 @@ mod skymap;
 
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
+use bevy_egui::EguiPlugin;
 use components::{AppState, MyAssets};
 
 fn main() {
@@ -25,6 +26,7 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_state::<AppState>()
+        .add_plugin(EguiPlugin)
         .add_loading_state(
             LoadingState::new(AppState::AssetLoading).continue_to_state(AppState::InGame),
         )

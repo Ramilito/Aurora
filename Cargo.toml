@@ -7,6 +7,7 @@ edition = "2021"
 # bevy = { version = "0.10.1", features=["jpeg"] }
 bevy = "0.10.1"
 bevy_asset_loader = "0.16.0"
+bevy_egui = "0.20.3"
 bevy_panorbit_camera = "0.4.1"
 bevy_rapier3d = { version = "*", features = [ "debug-render-3d" ] }
 # bevy-ui-navigation = "0.24.0"
