@@ -7,10 +7,10 @@ use bevy_rapier3d::prelude::{Collider, ComputedColliderShape, Dominance, Restitu
 use crate::components::MyAssets;
 
 pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    // commands.spawn(SceneBundle {
-    //     scene: asset_server.load("map/clouds_skybox.glb#Scene0"),
-    //     ..default()
-    // });
+    commands.spawn(SceneBundle {
+        scene: asset_server.load("map/clouds_skybox.glb#Scene0"),
+        ..default()
+    });
 
     commands.spawn(PointLightBundle {
         transform: Transform::from_xyz(0.0, 3.0, 0.0),
@@ -24,9 +24,10 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     });
 
     commands.spawn(PointLightBundle {
-        transform: Transform::from_xyz(-5.0, 15.0, 10.0),
+        transform: Transform::from_xyz(-5.0, 25.0, 10.0),
         point_light: PointLight {
             intensity: 10000.0,
+            range: 1000.0,
             color: Color::WHITE,
             shadows_enabled: true,
             ..default()
