@@ -8,9 +8,7 @@ mod player;
 mod skymap;
 
 use bevy::prelude::*;
-use bevy_asset_loader::prelude::*;
-use bevy_egui::EguiPlugin;
-use components::{AppState, MyAssets};
+use components::AppState;
 use game::{ingame::InGamePlugin, loading::LoadingPlugin};
 
 fn main() {
@@ -27,12 +25,7 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_state::<AppState>()
-        .add_plugin(EguiPlugin)
         .add_plugin(LoadingPlugin)
-        .add_loading_state(
-            LoadingState::new(AppState::AssetLoading).continue_to_state(AppState::InGame),
-        )
-        .add_collection_to_loading_state::<_, MyAssets>(AppState::AssetLoading)
         .add_plugin(collision::CollisionPlugin)
         .add_plugin(camera::CameraPlugin)
         .add_plugin(InGamePlugin)

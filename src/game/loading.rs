@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_asset_loader::prelude::{LoadingState, LoadingStateAppExt};
 use bevy_egui::EguiPlugin;
 
-use crate::components::AppState;
+use crate::components::{AppState, MyAssets};
 // use bevy_asset_loader::prelude::*;
 // use bevy_egui::EguiPlugin;
 //
@@ -18,9 +18,11 @@ impl Plugin for LoadingPlugin {
         //         register_assets(app);
         //         register_asset_loaders(app);
         //
-        app.add_plugin(EguiPlugin).add_loading_state(
-            LoadingState::new(AppState::AssetLoading).continue_to_state(AppState::InGame),
-        );
+        app.add_plugin(EguiPlugin)
+            .add_loading_state(
+                LoadingState::new(AppState::AssetLoading).continue_to_state(AppState::InGame),
+            )
+            .add_collection_to_loading_state::<_, MyAssets>(AppState::AssetLoading);
         //             .add_loading_state(
         //                 LoadingState::new(GameState::Loading)
         //                     .continue_to_state(GameState::InGame)
