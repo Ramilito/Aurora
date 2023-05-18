@@ -8,7 +8,6 @@ use bevy_rapier3d::prelude::{Collider, ComputedColliderShape, Dominance, Restitu
 
 use super::loading::MyAssets;
 
-
 impl Plugin for InGamePlugin {
     fn build(&self, app: &mut App) {
         app.add_system(load_assets.in_schedule(OnEnter(AppState::InGame)))
