@@ -1,5 +1,6 @@
-use crate::components::MyAssets;
 use bevy_rapier3d::prelude::CharacterLength;
+
+use crate::game::loading::MyAssets;
 
 use super::components::Player;
 use bevy::prelude::*;

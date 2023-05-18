@@ -1,4 +1,4 @@
-use crate::components::MyAssets;
+use crate::game::loading::MyAssets;
 
 use super::components::{Animations, NpcEmo};
 use bevy::prelude::*;
