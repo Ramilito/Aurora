@@ -1,4 +1,4 @@
-// use bevy::prelude::*;
+use bevy::prelude::*;
 // use bevy_asset_loader::prelude::*;
 // use bevy_egui::EguiPlugin;
 //
@@ -7,22 +7,22 @@
 // use crate::metadata::asset_loaders::register_asset_loaders;
 //
 //
-// pub struct LoadingPlugin;
+pub struct LoadingPlugin;
 //
-// impl Plugin for LoadingPlugin {
-//     fn build(&self, app: &mut App) {
-//         register_assets(app);
-//         register_asset_loaders(app);
-//
-//         app.add_plugin(EguiPlugin)
-//             .add_loading_state(
-//                 LoadingState::new(GameState::Loading)
-//                     .continue_to_state(GameState::InGame)
-//                     .with_collection::<TextureAssets>()
-//                     .with_collection::<GameMeta>(),
-//             );
-//     }
-// }
+impl Plugin for LoadingPlugin {
+    fn build(&self, app: &mut App) {
+        //         register_assets(app);
+        //         register_asset_loaders(app);
+        //
+        //         app.add_plugin(EguiPlugin)
+        //             .add_loading_state(
+        //                 LoadingState::new(GameState::Loading)
+        //                     .continue_to_state(GameState::InGame)
+        //                     .with_collection::<TextureAssets>()
+        //                     .with_collection::<GameMeta>(),
+        //             );
+    }
+}
 //
 // #[derive(AssetCollection, Resource)]
 // pub struct TextureAssets {
