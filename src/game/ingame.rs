@@ -1,10 +1,19 @@
-use bevy::{
-    gltf::{Gltf, GltfMesh},
-    prelude::*,
-};
+use crate::components::AppState;
+use bevy::prelude::*;
+
+pub struct InGamePlugin;
+
+use bevy::gltf::{Gltf, GltfMesh};
 use bevy_rapier3d::prelude::{Collider, ComputedColliderShape, Dominance, Restitution, RigidBody};
 
 use crate::components::MyAssets;
+
+impl Plugin for InGamePlugin {
+    fn build(&self, app: &mut App) {
+        app.add_system(load_assets.in_schedule(OnEnter(AppState::InGame)))
+            .add_startup_system(setup);
+    }
+}
 
 pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(SceneBundle {
