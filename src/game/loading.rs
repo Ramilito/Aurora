@@ -1,18 +1,11 @@
-use bevy::prelude::*;
-use bevy_asset_loader::prelude::{LoadingState, LoadingStateAppExt};
+use bevy::{gltf::Gltf, prelude::*};
+use bevy_asset_loader::prelude::{AssetCollection, LoadingState, LoadingStateAppExt};
 use bevy_egui::EguiPlugin;
 
-use crate::components::{AppState, MyAssets};
-// use bevy_asset_loader::prelude::*;
-// use bevy_egui::EguiPlugin;
-//
-// use crate::GameState;
-// use crate::metadata::{GameMeta, register_assets};
-// use crate::metadata::asset_loaders::register_asset_loaders;
-//
-//
+use crate::components::AppState;
+
 pub struct LoadingPlugin;
-//
+
 impl Plugin for LoadingPlugin {
     fn build(&self, app: &mut App) {
         //         register_assets(app);
@@ -23,25 +16,26 @@ impl Plugin for LoadingPlugin {
                 LoadingState::new(AppState::AssetLoading).continue_to_state(AppState::InGame),
             )
             .add_collection_to_loading_state::<_, MyAssets>(AppState::AssetLoading);
-        //             .add_loading_state(
-        //                 LoadingState::new(GameState::Loading)
-        //                     .continue_to_state(GameState::InGame)
-        //                     .with_collection::<TextureAssets>()
-        //                     .with_collection::<GameMeta>(),
-        //             );
     }
 }
-//
-// #[derive(AssetCollection, Resource)]
-// pub struct TextureAssets {
-//   /*  #[asset(texture_atlas(tile_size_x = 100., tile_size_y = 100., columns = 6, rows = 5))]
-//     #[asset(path = "arrow.png")]
-//     pub arrow_atlas: Handle<TextureAtlas>,*/
-//
-//     #[asset(path = "xp.png")]
-//     pub xp_texture: Handle<Image>,
-//
-//     #[asset(path = "tileset.png")]
-//     pub map_texture: Handle<Image>,
-//
-// }
+
+#[derive(AssetCollection, Resource)]
+pub struct MyAssets {
+    #[asset(path = "map/tower.gltf#Scene0")]
+    pub tower: Handle<Scene>,
+
+    #[asset(path = "map/tower.gltf#Mesh0/Primitive0")]
+    pub tower_mesh: Handle<Mesh>,
+
+    #[asset(path = "map/tower.gltf")]
+    pub tower_gltf: Handle<Gltf>,
+
+    #[asset(path = "models/AlienCake/alien.gltf#Scene0")]
+    pub player: Handle<Scene>,
+
+    #[asset(path = "models/AlienCake/alien.gltf#Mesh0/Primitive0")]
+    pub player_mesh: Handle<Mesh>,
+
+    #[asset(path = "models/animated/npc_emo.gltf#Scene0")]
+    pub npc_emo: Handle<Scene>,
+}

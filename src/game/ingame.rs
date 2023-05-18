@@ -6,7 +6,8 @@ pub struct InGamePlugin;
 use bevy::gltf::{Gltf, GltfMesh};
 use bevy_rapier3d::prelude::{Collider, ComputedColliderShape, Dominance, Restitution, RigidBody};
 
-use crate::components::MyAssets;
+use super::loading::MyAssets;
+
 
 impl Plugin for InGamePlugin {
     fn build(&self, app: &mut App) {
