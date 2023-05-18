@@ -15,7 +15,7 @@ impl Plugin for NpcPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(load_assets.in_schedule(OnEnter(AppState::InGame)))
             .add_startup_system(setup)
-            .add_startup_system(dialog_start)
-            .add_system(setup_scene_once_loaded);
+            .add_system(setup_scene_once_loaded)
+        .add_system(dialog_start);
     }
 }
