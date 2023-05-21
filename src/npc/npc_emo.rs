@@ -31,6 +31,16 @@ impl NpcBundle {
 pub fn setup(asset_server: Res<AssetServer>, mut commands: Commands) {
     // Insert a resource with the current scene information
     commands.insert_resource(Animations(vec![
+        asset_server.load("models/animated/npc_emo.gltf#Animation12"),
+        asset_server.load("models/animated/npc_emo.gltf#Animation11"),
+        asset_server.load("models/animated/npc_emo.gltf#Animation10"),
+        asset_server.load("models/animated/npc_emo.gltf#Animation9"),
+        asset_server.load("models/animated/npc_emo.gltf#Animation8"),
+        asset_server.load("models/animated/npc_emo.gltf#Animation7"),
+        asset_server.load("models/animated/npc_emo.gltf#Animation6"),
+        asset_server.load("models/animated/npc_emo.gltf#Animation5"),
+        asset_server.load("models/animated/npc_emo.gltf#Animation4"),
+        asset_server.load("models/animated/npc_emo.gltf#Animation3"),
         asset_server.load("models/animated/npc_emo.gltf#Animation2"),
         asset_server.load("models/animated/npc_emo.gltf#Animation1"),
         asset_server.load("models/animated/npc_emo.gltf#Animation0"),
