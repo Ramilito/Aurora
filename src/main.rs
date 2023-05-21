@@ -5,6 +5,7 @@ mod game;
 mod map;
 mod npc;
 mod player;
+mod puzzles;
 mod skymap;
 
 use bevy::prelude::*;
@@ -33,5 +34,6 @@ fn main() {
         .add_plugin(InGamePlugin)
         .add_plugin(player::PlayerPlugin)
         .add_plugin(npc::NpcPlugin)
+        .add_plugin(puzzles::PuzzlePlugin)
         .run();
 }
