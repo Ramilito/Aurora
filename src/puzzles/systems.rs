@@ -29,8 +29,7 @@ pub fn setup(
             PuzzleBoxLeft,
             PbrBundle {
                 mesh: meshes.add(Mesh::from(shape::Cube { size: 0.5 })),
-                material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-                // transform: Transform::from_xyz(6.0, 3.5, 0.0),
+                material: materials.add(Color::ALICE_BLUE.into()),
                 ..default()
             },
         ))
@@ -44,8 +43,8 @@ pub fn setup(
         PuzzlePlateLeft,
         PbrBundle {
             mesh: meshes.add(Mesh::from(shape::Plane::from_size(1.0))),
-            material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-            transform: Transform::from_xyz(2.0, 0.625, 3.0),
+            material: materials.add(Color::ALICE_BLUE.into()),
+            transform: Transform::from_xyz(2.0, 0.630, 3.0),
             ..default()
         },
     ));
@@ -54,8 +53,8 @@ pub fn setup(
         PuzzlePlateRight,
         PbrBundle {
             mesh: meshes.add(Mesh::from(shape::Plane::from_size(1.0))),
-            material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
-            transform: Transform::from_xyz(-2.0, 0.625, 3.0),
+            material: materials.add(Color::DARK_GREEN.into()),
+            transform: Transform::from_xyz(-2.0, 0.630, 3.0),
             ..default()
         },
     ));
@@ -64,7 +63,7 @@ pub fn setup(
             PuzzleBoxRight,
             PbrBundle {
                 mesh: meshes.add(Mesh::from(shape::Cube { size: 0.5 })),
-                material: materials.add(Color::rgb(0.8, 0.7, 0.6).into()),
+                material: materials.add(Color::DARK_GREEN.into()),
                 // transform: Transform::from_xyz(6.0, 3.5, 0.0),
                 ..default()
             },
