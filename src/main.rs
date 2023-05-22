@@ -9,6 +9,7 @@ mod puzzles;
 mod skymap;
 
 use bevy::prelude::*;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use components::AppState;
 use game::{ingame::InGamePlugin, loading::LoadingPlugin};
 use seldom_state::StateMachinePlugin;
@@ -27,6 +28,8 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_state::<AppState>()
+        .add_plugin(WorldInspectorPlugin::new())
+        //.add_plugin(EguiPlugin)
         .add_plugin(StateMachinePlugin)
         .add_plugin(LoadingPlugin)
         .add_plugin(collision::CollisionPlugin)
