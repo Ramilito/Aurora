@@ -65,6 +65,7 @@ pub fn load_assets(
     mut commands: Commands,
     meshes: Res<Assets<Mesh>>,
     asset_gltf: Res<Assets<Gltf>>,
+    asset_server: Res<AssetServer>,
     assets_gltfmesh: Res<Assets<GltfMesh>>,
 ) {
     if let Some(platform) = asset_gltf.get(&_my_assets.platform_gltf) {
