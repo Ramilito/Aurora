@@ -50,7 +50,6 @@ pub fn setup(
             PbrBundle {
                 mesh: meshes.add(Mesh::from(shape::Cube { size: 0.5 })),
                 material: materials.add(Color::DARK_GREEN.into()),
-                // transform: Transform::from_xyz(6.0, 3.5, 0.0),
                 ..default()
             },
         ))
@@ -79,15 +78,15 @@ pub fn load_assets(
                     (0.0_f32).to_radians(),
                 )),
         );
-        // commands
-        //     .spawn((
-        //         PuzzlePlateRight,
-        //         SceneBundle {
-        //             scene: asset_server.load("models/platform.gltf#Scene0"),
-        //             ..default()
-        //         },
-        //     ))
-        //     .insert(commons);
+        commands
+            .spawn((
+                PuzzlePlateRight,
+                SceneBundle {
+                    scene: asset_server.load("models/platform.gltf#Scene0"),
+                    ..default()
+                },
+            ))
+            .insert(commons);
 
         commands.spawn(RigidBody::Fixed).insert(commons).with_children(|children| {
             for mesh_handle in platform.named_meshes.iter() {
