@@ -1,7 +1,4 @@
-use bevy::{
-    gltf::{Gltf, GltfMesh},
-    prelude::*,
-};
+use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
 
 use crate::game::loading::MyAssets;
@@ -63,62 +60,36 @@ pub fn setup(
 pub fn load_assets(
     _my_assets: Res<MyAssets>,
     mut commands: Commands,
-    meshes: Res<Assets<Mesh>>,
-    asset_gltf: Res<Assets<Gltf>>,
     asset_server: Res<AssetServer>,
-    assets_gltfmesh: Res<Assets<GltfMesh>>,
 ) {
-    if let Some(platform) = asset_gltf.get(&_my_assets.platform_gltf) {
-        let commons = TransformBundle::from(
-            Transform::from_xyz(2.0, 0.615, 3.0)
-                .with_scale(Vec3::new(1.5, 1.5, 1.5))
-                .with_rotation(Quat::from_euler(
-                    EulerRot::XYZ,
-                    (-90.0_f32).to_radians(),
-                    (0.0_f32).to_radians(),
-                    (0.0_f32).to_radians(),
-                )),
-        );
+    // let commons = TransformBundle::from(
+    //     Transform::from_xyz(2.0, 0.615, 3.0)
+    //         .with_scale(Vec3::new(1.5, 1.5, 1.5))
+    //         .with_rotation(Quat::from_euler(
+    //             EulerRot::XYZ,
+    //             (-90.0_f32).to_radians(),
+    //             (0.0_f32).to_radians(),
+    //             (0.0_f32).to_radians(),
+    //         )),
+    // );
+    commands.spawn((
+        PuzzlePlateRight,
+        SceneBundle {
+            scene: asset_server.load("models/platform.gltf#Scene0"),
+            ..default()
+        },
+    ));
+    //     .insert(commons);
+
+    for (collider, transform) in _my_assets.platform_colliders.iter() {
         commands
-            .spawn((
-                PuzzlePlateRight,
-                SceneBundle {
-                    scene: asset_server.load("models/platform.gltf#Scene0"),
-                    ..default()
-                },
-            ))
-            .insert(commons);
-
-        commands.spawn(RigidBody::Fixed).insert(commons).with_children(|children| {
-            for mesh_handle in platform.named_meshes.iter() {
-                let (_name, gltf_mesh) = mesh_handle;
-
-                let mesh = assets_gltfmesh.get(gltf_mesh).clone().unwrap();
-                let collider = Collider::from_bevy_mesh(
-                    meshes.get(&mesh.primitives[0].mesh.clone()).unwrap(),
-                    &ComputedColliderShape::TriMesh,
-                )
-                .unwrap();
-
-                children
-                    .spawn(collider)
-                    .insert(Dominance::group(1))
-                    .insert(Restitution::coefficient(0.0))
-                    .insert(TransformBundle::from(Transform::default()));
-            }
-            children.spawn(RigidBody::Fixed);
-        });
-        // .with_children(|children| {
-        //     for mesh_handle in tower.named_meshes.iter() {
-        //         let collider = get_collider(assets_gltfmesh, meshes, mesh_handle);
-        //
-        //         children
-        //             .spawn(collider)
-        //             .insert(Dominance::group(1))
-        //             .insert(Restitution::coefficient(0.0))
-        //             .insert(TransformBundle::from(Transform::default()));
-        //     }
-        // });
+            .spawn(RigidBody::Fixed)
+            .insert(collider.clone())
+            .insert(Dominance::group(1))
+            .insert(Restitution::coefficient(0.0))
+            .insert(TransformBundle::from(
+                transform.clone().with_translation(Vec3::new(2.0, 0.615, 3.0)),
+            ));
     }
 }
 
