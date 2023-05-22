@@ -1,6 +1,5 @@
 use bevy::{gltf::Gltf, prelude::*};
 use bevy_asset_loader::prelude::{AssetCollection, LoadingState, LoadingStateAppExt};
-use bevy_egui::EguiPlugin;
 
 use crate::components::AppState;
 
@@ -8,14 +7,10 @@ pub struct LoadingPlugin;
 
 impl Plugin for LoadingPlugin {
     fn build(&self, app: &mut App) {
-        //         register_assets(app);
-        //         register_asset_loaders(app);
-        //
-        app.add_plugin(EguiPlugin)
-            .add_loading_state(
-                LoadingState::new(AppState::AssetLoading).continue_to_state(AppState::InGame),
-            )
-            .add_collection_to_loading_state::<_, MyAssets>(AppState::AssetLoading);
+        app.add_loading_state(
+            LoadingState::new(AppState::AssetLoading).continue_to_state(AppState::InGame),
+        )
+        .add_collection_to_loading_state::<_, MyAssets>(AppState::AssetLoading);
     }
 }
 
@@ -38,4 +33,10 @@ pub struct MyAssets {
 
     #[asset(path = "models/animated/npc_emo.gltf#Scene0")]
     pub npc_emo: Handle<Scene>,
+
+    #[asset(path = "models/platform.gltf#Scene0")]
+    pub platform: Handle<Scene>,
+
+    #[asset(path = "models/platform.gltf")]
+    pub platform_gltf: Handle<Gltf>,
 }
