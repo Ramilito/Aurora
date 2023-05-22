@@ -4,5 +4,6 @@ use bevy::prelude::*;
 pub enum AppState {
     #[default]
     AssetLoading,
+    AssetLoaded,
     InGame,
 }
