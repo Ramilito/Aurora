@@ -57,38 +57,31 @@ pub fn setup(
         .insert(ColliderMassProperties::Density(2.0));
 }
 
-pub fn load_assets(
-    _my_assets: Res<MyAssets>,
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-) {
-    // let commons = TransformBundle::from(
-    //     Transform::from_xyz(2.0, 0.615, 3.0)
-    //         .with_scale(Vec3::new(1.5, 1.5, 1.5))
-    //         .with_rotation(Quat::from_euler(
-    //             EulerRot::XYZ,
-    //             (-90.0_f32).to_radians(),
-    //             (0.0_f32).to_radians(),
-    //             (0.0_f32).to_radians(),
-    //         )),
-    // );
-    commands.spawn((
-        PuzzlePlateRight,
-        SceneBundle {
-            scene: asset_server.load("models/platform.gltf#Scene0"),
-            ..default()
-        },
-    ));
-    //     .insert(commons);
+pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
+    commands
+        .spawn((
+            PuzzlePlateRight,
+            SceneBundle {
+                scene: _my_assets.platform.clone(),
+                ..default()
+            },
+        ))
+        .insert(TransformBundle::from(
+            Transform::from_xyz(2.0, 0.615, 3.0).with_scale(Vec3::new(1.5, 0.5, 1.5)),
+        ));
 
     for (collider, transform) in _my_assets.platform_colliders.iter() {
+        println!("collider: {:?}", transform);
         commands
             .spawn(RigidBody::Fixed)
             .insert(collider.clone())
             .insert(Dominance::group(1))
             .insert(Restitution::coefficient(0.0))
             .insert(TransformBundle::from(
-                transform.clone().with_translation(Vec3::new(2.0, 0.615, 3.0)),
+                transform
+                    .clone()
+                    .with_translation(Vec3::new(2.0, 0.615, 3.0))
+                    .with_scale(Vec3::new(1.5, 0.5, 1.5)),
             ));
     }
 }

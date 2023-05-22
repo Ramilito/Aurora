@@ -53,10 +53,18 @@ fn add_colliders(
     mut _my_assets: ResMut<MyAssets>,
     asset_gltf: Res<Assets<Gltf>>,
     mut app_state: ResMut<NextState<AppState>>,
+    mut scenes: ResMut<Assets<Scene>>,
     assets_gltfmesh: Res<Assets<GltfMesh>>,
 ) {
-    _my_assets.platform_colliders =
-        get_scene_colliders(&asset_gltf, &_my_assets, &assets_gltfmesh, &meshes);
+    let scene = scenes.get_mut(&_my_assets.platform).unwrap();
+
+    _my_assets.platform_colliders = get_scene_colliders(
+        &asset_gltf,
+        &_my_assets,
+        &assets_gltfmesh,
+        &meshes,
+        &mut scene.world,
+    );
 
     app_state.set(AppState::InGame);
 }
