@@ -1,10 +1,9 @@
-use bevy_rapier3d::prelude::CharacterLength;
+use bevy::prelude::*;
+use bevy_rapier3d::prelude::*;
 
 use crate::game::loading::MyAssets;
 
 use super::components::Player;
-use bevy::prelude::*;
-use bevy_rapier3d::prelude::{Collider, KinematicCharacterController, RigidBody};
 
 pub const PLAYER_SPEED: f32 = 2.0;
 
@@ -25,13 +24,17 @@ impl PlayerBundle {
 }
 
 pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
-    commands
-        .spawn(PlayerBundle::new(_my_assets.player.clone()))
-        .insert(Collider::cuboid(0.25, 0.4, 0.2))
-        .insert(RigidBody::KinematicPositionBased)
-        .insert(KinematicCharacterController { ..default() })
-        // .insert(Dominance::group(10))
-        .insert(TransformBundle::from(Transform::from_xyz(0.0, 1.0, 18.0)));
+    for (collider, transform) in _my_assets.player_colliders.iter() {
+        let mut transform = Transform::from(transform.clone());
+        transform.translation = Vec3::new(0.0, 3.0, 18.0);
+
+        commands
+            .spawn(PlayerBundle::new(_my_assets.player.clone()))
+            .insert(RigidBody::KinematicPositionBased)
+            .insert(collider.clone())
+            .insert(KinematicCharacterController { ..default() })
+            .insert(TransformBundle::from_transform(transform.clone()));
+    }
 }
 
 // pub fn read_result_system(controllers: Query<(Entity, &KinematicCharacterControllerOutput)>) {

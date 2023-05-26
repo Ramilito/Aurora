@@ -1,11 +1,9 @@
-use bevy::{
-    gltf::{Gltf, GltfMesh},
-    prelude::*,
-};
+use bevy::prelude::*;
 use bevy_asset_loader::prelude::{AssetCollection, LoadingState, LoadingStateAppExt};
+use bevy_gltf_collider::get_scene_colliders;
 use bevy_rapier3d::prelude::Collider;
 
-use crate::{collision::get_scene_colliders, components::AppState};
+use crate::components::AppState;
 
 pub struct LoadingPlugin;
 
@@ -23,86 +21,49 @@ impl Plugin for LoadingPlugin {
 pub struct MyAssets {
     #[asset(path = "map/tower.gltf#Scene0")]
     pub tower: Handle<Scene>,
-
     #[asset(path = "map/tower.gltf#Mesh0/Primitive0")]
     pub tower_mesh: Handle<Mesh>,
-
     #[asset(path = "map/tower.gltf")]
     pub tower_gltf: Handle<Gltf>,
+    pub tower_colliders: Vec<(Collider, Transform)>,
 
     #[asset(path = "models/AlienCake/alien.gltf#Scene0")]
     pub player: Handle<Scene>,
-
+    #[asset(path = "models/AlienCake/alien.gltf")]
+    pub player_gltf: Handle<Gltf>,
     #[asset(path = "models/AlienCake/alien.gltf#Mesh0/Primitive0")]
     pub player_mesh: Handle<Mesh>,
+    pub player_colliders: Vec<(Collider, Transform)>,
 
     #[asset(path = "models/animated/npc_emo.gltf#Scene0")]
     pub npc_emo: Handle<Scene>,
+    pub npc_colliders: Vec<(Collider, Transform)>,
 
     #[asset(path = "models/platform.gltf#Scene0")]
     pub platform: Handle<Scene>,
-
     #[asset(path = "models/platform.gltf")]
     pub platform_gltf: Handle<Gltf>,
-
     pub platform_colliders: Vec<(Collider, Transform)>,
 }
 
 fn add_colliders(
-    meshes: Res<Assets<Mesh>>,
+    mut meshes: ResMut<Assets<Mesh>>,
     mut _my_assets: ResMut<MyAssets>,
-    asset_gltf: Res<Assets<Gltf>>,
     mut app_state: ResMut<NextState<AppState>>,
     mut scenes: ResMut<Assets<Scene>>,
-    assets_gltfmesh: Res<Assets<GltfMesh>>,
 ) {
-    let scene = scenes.get_mut(&_my_assets.platform).unwrap();
-
     _my_assets.platform_colliders = get_scene_colliders(
-        &asset_gltf,
-        &_my_assets,
-        &assets_gltfmesh,
-        &meshes,
-        &mut scene.world,
-    );
+        &mut meshes,
+        &mut scenes.get_mut(&_my_assets.platform).unwrap().world,
+    )
+    .unwrap();
+
+    _my_assets.player_colliders = get_scene_colliders(
+        &mut meshes,
+        &mut scenes.get_mut(&_my_assets.player).unwrap().world,
+    )
+    .unwrap();
 
     app_state.set(AppState::InGame);
 }
-
-// fn add_colliders(
-//     mut meshes: ResMut<Assets<Mesh>>,
-//     mut scenes: ResMut<Assets<Scene>>,
-//     mut _my_assets: ResMut<MyAssets>,
-//     mut app_state: ResMut<NextState<AppState>>,
-// ) {
-//     let scene = scenes.get_mut(&_my_assets.platform).unwrap();
-//
-//     _my_assets.platform_colliders = get_scene_colliders(&mut meshes, &mut scene.world)
-//         .expect("Failed to get colliders from scene");
-//
-//     app_state.set(AppState::InGame);
-// }
-
-// fn get_scene_colliders(
-//     meshes: &mut Assets<Mesh>,
-//     world: &mut World,
-// ) -> Result<Vec<(Collider, Transform)>, ColliderFromSceneError> {
-//     let mut result = Vec::new();
-//     // let mut entities_to_despawn = Vec::new();
-//     let mut meshes_q = world.query::<(Entity, &Name, Option<&Children>)>();
-//     for (entity, entity_name, children) in meshes_q.iter(world) {
-//         println!("entity:{:?}", entity);
-//         println!("entity_name:{:?}", entity_name);
-//         println!("children:{:?}", children);
-//
-//         let collider = Collider::from_bevy_mesh(
-//             meshes.get(&mesh.primitives[0].mesh.clone()).unwrap(),
-//             &ComputedColliderShape::TriMesh,
-//         )
-//         .unwrap();
-//     }
-//
-//     // return Err(ColliderFromSceneError::NoCollidersFound);
-//
-//     Ok(result)
-// }
+use bevy::gltf::Gltf;

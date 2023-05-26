@@ -66,24 +66,20 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
                 ..default()
             },
         ))
+        .insert(RigidBody::Fixed)
         .insert(TransformBundle::from(
-            Transform::from_xyz(2.0, 0.615, 3.0).with_scale(Vec3::new(1.5, 0.5, 1.5)),
-        ));
-
-    for (collider, transform) in _my_assets.platform_colliders.iter() {
-        println!("collider: {:?}", transform);
-        commands
-            .spawn(RigidBody::Fixed)
-            .insert(collider.clone())
-            .insert(Dominance::group(1))
-            .insert(Restitution::coefficient(0.0))
-            .insert(TransformBundle::from(
-                transform
-                    .clone()
-                    .with_translation(Vec3::new(2.0, 0.615, 3.0))
-                    .with_scale(Vec3::new(1.5, 0.5, 1.5)),
-            ));
-    }
+            Transform::from_xyz(2.0, 0.615, 3.0).with_scale(Vec3::new(1.5, 2.0, 1.5)),
+        ))
+        .with_children(|children| {
+            for (collider, transform) in _my_assets.platform_colliders.iter() {
+                println!("collider: {:?}", collider);
+                
+                children
+                    .spawn(RigidBody::Fixed)
+                    .insert(collider.clone())
+                    .insert(TransformBundle::from(transform.clone()));
+            }
+        });
 }
 
 pub fn check_puzzle_right(
