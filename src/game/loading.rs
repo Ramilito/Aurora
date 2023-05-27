@@ -44,6 +44,12 @@ pub struct MyAssets {
     #[asset(path = "models/platform.gltf")]
     pub platform_gltf: Handle<Gltf>,
     pub platform_colliders: Vec<(Collider, Transform)>,
+
+    #[asset(path = "models/barrel.gltf#Scene0")]
+    pub barrel: Handle<Scene>,
+    pub barrel_colliders: Vec<(Collider, Transform)>,
+    // #[asset(path = "models/platform.gltf")]
+    // pub platform_gltf: Handle<Gltf>,
 }
 
 fn add_colliders(
@@ -64,6 +70,11 @@ fn add_colliders(
     )
     .unwrap();
 
+    _my_assets.barrel_colliders = get_scene_colliders(
+        &mut meshes,
+        &mut scenes.get_mut(&_my_assets.barrel).unwrap().world,
+    )
+    .unwrap();
     app_state.set(AppState::InGame);
 }
 use bevy::gltf::Gltf;

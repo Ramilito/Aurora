@@ -12,10 +12,8 @@ pub(crate) fn get_state_machine() -> StateMachine {
     StateMachine::default()
         .trans::<Idle>(near_player, InDialog)
         .trans::<InDialog>(near_player.not(), Idle)
-        .set_trans_logging(true)
 }
 
-//States
 #[derive(Component, Clone, Reflect)]
 #[component(storage = "SparseSet")]
 pub struct Idle;
