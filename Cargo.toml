@@ -21,3 +21,11 @@ bevy_gltf_collider = {git = "https://github.com/Defernus/bevy_gltf_collider.git"
 
 # https://github.com/IyesGames has a lot of nice things
 
+[profile.dev]
+opt-level = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev.package.bevy_rapier3d]
+opt-level = 3
