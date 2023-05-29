@@ -9,24 +9,6 @@ pub struct Unsolved;
 pub struct Solved;
 
 #[derive(Component)]
-pub struct PuzzleBoxLeft;
-
-#[derive(Component)]
-pub struct PuzzlePlateLeft;
-
-#[derive(Component)]
-pub struct PuzzlePlateRight;
-
-#[derive(Component)]
-pub struct PuzzleBoxRight;
-
-#[derive(Component)]
-pub struct PuzzleLightRight;
-
-#[derive(Component)]
-pub struct PuzzleLightLeft;
-
-#[derive(Component)]
 pub struct Box;
 
 #[derive(Component)]
