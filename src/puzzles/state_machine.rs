@@ -2,12 +2,11 @@ use crate::puzzles::components::*;
 use bevy::prelude::*;
 use seldom_state::prelude::*;
 
-pub(crate) fn get_state_machine(name: String) -> StateMachine {
+pub(crate) fn get_state_machine() -> StateMachine {
     let plate_pressed = PlatePressed { range: 0.5 };
     StateMachine::default()
         .trans::<Unsolved>(plate_pressed, Solved)
         .trans::<Solved>(plate_pressed.not(), Unsolved)
-    // .set_trans_logging(true)
 }
 
 #[derive(Clone, Copy, FromReflect, Reflect)]
@@ -49,23 +48,27 @@ impl BoolTrigger for PlatePressed {
 
 pub fn unsolved(
     unsolved: Query<(Entity, &Unsolved)>,
-    mut light: Query<(&mut PointLight, With<Light>)>,
+    q_parent: Query<(&Plate, &Name, &Children)>,
+    mut q_child: Query<(&mut PointLight, With<Light>)>,
 ) {
-    for (_entity, _unsolved) in &unsolved {
-        if let Ok(mut ligth) = light.get_single_mut() {
-            ligth.0.intensity = 0.0;
+    for (entity, _unsolved) in &unsolved {
+        for (_plate, _name, children) in q_parent.get(entity).iter() {
+            for &child in children.iter() {
+                if let Ok(mut ligth) = q_child.get_mut(child) {
+                    ligth.0.intensity = 0.0;
+                }
+            }
         }
     }
 }
+
 pub fn solved(
     solved: Query<(Entity, &Solved)>,
     q_parent: Query<(&Plate, &Name, &Children)>,
     mut q_child: Query<(&mut PointLight, With<Light>)>,
 ) {
     for (entity, _solved) in &solved {
-        for (plate, name, children) in q_parent.get(entity).iter() {
-            println!("test: {:?}", name);
-
+        for (_plate, _name, children) in q_parent.get(entity).iter() {
             for &child in children.iter() {
                 if let Ok(mut ligth) = q_child.get_mut(child) {
                     ligth.0.intensity = 1000.0;

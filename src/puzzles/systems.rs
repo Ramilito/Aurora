@@ -1,11 +1,8 @@
+use super::{components::*, state_machine};
+use crate::game::loading::MyAssets;
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
 use seldom_state::prelude::StateMachine;
-
-use crate::game::loading::MyAssets;
-
-// use super::state_machine::{self, Unsolved};
-use super::{components::*, state_machine};
 
 #[derive(Bundle)]
 pub struct PlateBundle {
@@ -21,7 +18,7 @@ impl PlateBundle {
     pub fn new(scene: Handle<Scene>, transform: Transform, name: &str) -> Self {
         return PlateBundle {
             name: Name::new(name.to_string()),
-            state_machine: state_machine::get_state_machine(name.to_string()),
+            state_machine: state_machine::get_state_machine(),
             default_state: Unsolved,
             plate: Plate,
             scene_bundle: SceneBundle {
