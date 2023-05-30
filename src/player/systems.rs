@@ -30,10 +30,14 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
 
         commands
             .spawn(PlayerBundle::new(_my_assets.player.clone()))
-            .insert(RigidBody::KinematicPositionBased)
+            .insert(RigidBody::KinematicVelocityBased)
             .insert(collider.clone())
+            .insert(Velocity::default())
+            .insert(Jumper {
+                is_jumping: false,
+            })
             .insert(KinematicCharacterController {
-                offset: CharacterLength::Absolute(0.1),
+                offset: CharacterLength::Absolute(0.05),
                 ..default()
             })
             .insert(TransformBundle::from_transform(transform.clone()));
