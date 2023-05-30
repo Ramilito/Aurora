@@ -21,7 +21,7 @@ impl PlateBundle {
     pub fn new(scene: Handle<Scene>, transform: Transform, name: &str) -> Self {
         return PlateBundle {
             name: Name::new(name.to_string()),
-            state_machine: state_machine::get_state_machine(),
+            state_machine: state_machine::get_state_machine(name.to_string()),
             default_state: Unsolved,
             plate: Plate,
             scene_bundle: SceneBundle {
@@ -38,44 +38,21 @@ pub fn setup(
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut commands: Commands,
 ) {
-    // commands
-    //     .spawn((
-    //         Box,
-    //         Name::new("box_left"),
-    //         PbrBundle {
-    //             mesh: meshes.add(Mesh::from(shape::Cube { size: 0.5 })),
-    //             material: materials.add(Color::ALICE_BLUE.into()),
-    //             ..default()
-    //         },
-    //     ))
-    //     .insert(Collider::cuboid(0.3, 0.3, 0.3))
-    //     .insert(RigidBody::Dynamic)
-    //     .insert(TransformBundle::from(Transform::from_xyz(0.0, 3.0, 14.0)))
-    //     .insert(Restitution::coefficient(0.3))
-    //     .insert(ColliderMassProperties::Density(2.0));
-    //
-    // commands
-    //     .spawn((
-    //         PuzzleBoxRight,
-    //         PbrBundle {
-    //             mesh: meshes.add(Mesh::from(shape::Cube { size: 0.5 })),
-    //             material: materials.add(Color::DARK_GREEN.into()),
-    //             ..default()
-    //         },
-    //     ))
-    //     .insert(Collider::cuboid(0.3, 0.3, 0.3))
-    //     .insert(TransformBundle::from(Transform::from_xyz(0.0, 3.0, 14.0)))
-    //     .insert(RigidBody::Dynamic)
-    //     .insert(Restitution::coefficient(0.3))
-    //     .insert(ColliderMassProperties::Density(2.0));
-}
-
-pub fn load_assets(
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
-    _my_assets: Res<MyAssets>,
-    mut commands: Commands,
-) {
+    commands
+        .spawn((
+            Box,
+            Name::new("left"),
+            PbrBundle {
+                mesh: meshes.add(Mesh::from(shape::Cube { size: 0.5 })),
+                material: materials.add(Color::ALICE_BLUE.into()),
+                ..default()
+            },
+        ))
+        .insert(Collider::cuboid(0.3, 0.3, 0.3))
+        .insert(RigidBody::Dynamic)
+        .insert(TransformBundle::from(Transform::from_xyz(0.0, 3.0, 14.0)))
+        .insert(Restitution::coefficient(0.3))
+        .insert(ColliderMassProperties::Density(1.0));
     commands
         .spawn((
             Box,
@@ -88,9 +65,40 @@ pub fn load_assets(
         ))
         .insert(Collider::cuboid(0.3, 0.3, 0.3))
         .insert(RigidBody::Dynamic)
-        .insert(TransformBundle::from(Transform::from_xyz(0.0, 3.0, 14.0)))
+        .insert(TransformBundle::from(Transform::from_xyz(2.0, 3.0, 3.0)))
         .insert(Restitution::coefficient(0.3))
         .insert(ColliderMassProperties::Density(1.0));
+}
+
+pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
+    commands
+        .spawn(PlateBundle::new(
+            _my_assets.platform.clone(),
+            Transform::from_xyz(-2.0, 0.515, 3.0),
+            "left",
+        ))
+        .with_children(|children| {
+            for (collider, transform) in _my_assets.platform_colliders.iter() {
+                children.spawn((
+                    RigidBody::Fixed,
+                    collider.clone(),
+                    TransformBundle::from(transform.clone()),
+                ));
+            }
+            children.spawn((
+                Light,
+                PointLightBundle {
+                    transform: Transform::from_xyz(0.0, 0.715, 0.0),
+                    point_light: PointLight {
+                        intensity: 0.0,
+                        color: Color::ORANGE,
+                        shadows_enabled: true,
+                        ..default()
+                    },
+                    ..default()
+                },
+            ));
+        });
 
     commands
         .spawn(PlateBundle::new(

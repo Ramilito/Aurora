@@ -2,12 +2,12 @@ use crate::puzzles::components::*;
 use bevy::prelude::*;
 use seldom_state::prelude::*;
 
-pub(crate) fn get_state_machine() -> StateMachine {
+pub(crate) fn get_state_machine(name: String) -> StateMachine {
     let plate_pressed = PlatePressed { range: 0.5 };
     StateMachine::default()
         .trans::<Unsolved>(plate_pressed, Solved)
         .trans::<Solved>(plate_pressed.not(), Unsolved)
-        .set_trans_logging(true)
+    // .set_trans_logging(true)
 }
 
 #[derive(Clone, Copy, FromReflect, Reflect)]
@@ -17,27 +17,31 @@ pub struct PlatePressed {
 
 impl BoolTrigger for PlatePressed {
     type Param<'w, 's> = (
-        Query<'w, 's, &'static Transform, With<Box>>,
-        Query<'w, 's, &'static Name, With<Box>>,
-        Query<'w, 's, &'static Name, With<Plate>>,
-        Query<'w, 's, &'static Transform, With<Plate>>,
+        Query<'w, 's, (&'static Transform, &'static Name), With<Box>>,
+        Query<'w, 's, (&'static Transform, &'static Name), With<Plate>>,
     );
-    fn trigger(
-        &self,
-        entity: Entity,
-        (piece_pos, piece_name, plate_name, plate_pos): Self::Param<'_, '_>,
-    ) -> bool {
+    fn trigger(&self, entity: Entity, (pieces, plates): Self::Param<'_, '_>) -> bool {
         // If the box is on the plate, return true
         // TODO: Check state before running below code
-        if let Ok(piece_pos) = piece_pos.get_single() {
-            if let Ok(plate_pos) = plate_pos.get(entity) {
-                if piece_pos.translation.distance(plate_pos.translation) < self.range {
-                    if plate_name.get_single().unwrap() == piece_name.get_single().unwrap() {
+
+        if let Ok(plate) = plates.get(entity) {
+            for piece in pieces.iter() {
+                if piece.0.translation.distance(plate.0.translation) < self.range {
+                    if piece.1 == plate.1 {
                         return true;
                     }
                 }
             }
         }
+        // for piece in pieces.iter() {
+        //     for plate in plates.iter() {
+        //         if piece.0.translation.distance(plate.0.translation) < self.range {
+        //             if piece.1 == plate.1 {
+        //                 return true;
+        //             }
+        //         }
+        //     }
+        // }
 
         false
     }
@@ -54,19 +58,19 @@ pub fn unsolved(
     }
 }
 pub fn solved(
-    mut done: Local<bool>,
-    mut light: Query<(&mut PointLight, With<Light>)>,
     solved: Query<(Entity, &Solved)>,
+    q_parent: Query<(&Plate, &Name, &Children)>,
+    mut q_child: Query<(&mut PointLight, With<Light>)>,
 ) {
-    for (_entity, _solved) in &solved {
-        println!("solved");
-        if !*done {
-            if let Ok(mut ligth) = light.get_single_mut() {
-                ligth.0.intensity = 1000.0;
+    for (entity, _solved) in &solved {
+        for (plate, name, children) in q_parent.get(entity).iter() {
+            println!("test: {:?}", name);
+
+            for &child in children.iter() {
+                if let Ok(mut ligth) = q_child.get_mut(child) {
+                    ligth.0.intensity = 1000.0;
+                }
             }
-            *done = true;
-        } else {
-            *done = false;
         }
     }
 }
