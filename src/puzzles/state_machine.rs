@@ -20,9 +20,7 @@ impl BoolTrigger for PlatePressed {
         Query<'w, 's, (&'static Transform, &'static Name), With<Plate>>,
     );
     fn trigger(&self, entity: Entity, (pieces, plates): Self::Param<'_, '_>) -> bool {
-        // If the box is on the plate, return true
-        // TODO: Check state before running below code
-
+        // TODO: Check current state before running below code
         if let Ok(plate) = plates.get(entity) {
             for piece in pieces.iter() {
                 if piece.0.translation.distance(plate.0.translation) < self.range {
@@ -32,48 +30,52 @@ impl BoolTrigger for PlatePressed {
                 }
             }
         }
-        // for piece in pieces.iter() {
-        //     for plate in plates.iter() {
-        //         if piece.0.translation.distance(plate.0.translation) < self.range {
-        //             if piece.1 == plate.1 {
-        //                 return true;
-        //             }
-        //         }
-        //     }
-        // }
 
         false
     }
 }
 
 pub fn unsolved(
+    mut done: Local<bool>,
     unsolved: Query<(Entity, &Unsolved)>,
     q_parent: Query<(&Plate, &Name, &Children)>,
     mut q_child: Query<(&mut PointLight, With<Light>)>,
 ) {
-    for (entity, _unsolved) in &unsolved {
-        for (_plate, _name, children) in q_parent.get(entity).iter() {
-            for &child in children.iter() {
-                if let Ok(mut ligth) = q_child.get_mut(child) {
-                    ligth.0.intensity = 0.0;
+    if !*done {
+        for (entity, _unsolved) in &unsolved {
+            for (_plate, _name, children) in q_parent.get(entity).iter() {
+                for &child in children.iter() {
+                    if let Ok(mut ligth) = q_child.get_mut(child) {
+                        ligth.0.intensity = 0.0;
+                    }
                 }
             }
         }
+        *done = true;
+    } else {
+        *done = false;
     }
 }
 
 pub fn solved(
+    mut done: Local<bool>,
+    mut q_child: Query<(&mut PointLight, With<Light>)>,
     solved: Query<(Entity, &Solved)>,
     q_parent: Query<(&Plate, &Name, &Children)>,
-    mut q_child: Query<(&mut PointLight, With<Light>)>,
 ) {
-    for (entity, _solved) in &solved {
-        for (_plate, _name, children) in q_parent.get(entity).iter() {
-            for &child in children.iter() {
-                if let Ok(mut ligth) = q_child.get_mut(child) {
-                    ligth.0.intensity = 1000.0;
+    if !*done {
+        for (entity, _solved) in &solved {
+            for (_plate, _name, children) in q_parent.get(entity).iter() {
+                for &child in children.iter() {
+                    if let Ok(mut ligth) = q_child.get_mut(child) {
+                        ligth.0.intensity = 1000.0;
+                    }
                 }
             }
         }
+
+        *done = true;
+    } else {
+        *done = false;
     }
 }

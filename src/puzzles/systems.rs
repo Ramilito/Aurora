@@ -71,7 +71,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
     commands
         .spawn(PlateBundle::new(
             _my_assets.platform.clone(),
-            Transform::from_xyz(-2.0, 0.515, 3.0),
+            Transform::from_xyz(-2.0, 0.615, 3.0),
             "left",
         ))
         .with_children(|children| {
@@ -85,7 +85,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
             children.spawn((
                 Light,
                 PointLightBundle {
-                    transform: Transform::from_xyz(0.0, 0.715, 0.0),
+                    transform: Transform::from_xyz(0.0, 0.615, 0.0),
                     point_light: PointLight {
                         intensity: 0.0,
                         color: Color::ORANGE,
@@ -100,7 +100,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
     commands
         .spawn(PlateBundle::new(
             _my_assets.platform.clone(),
-            Transform::from_xyz(2.0, 0.515, 3.0),
+            Transform::from_xyz(2.0, 0.615, 3.0),
             "right",
         ))
         .with_children(|children| {
@@ -114,7 +114,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
             children.spawn((
                 Light,
                 PointLightBundle {
-                    transform: Transform::from_xyz(0.0, 0.715, 0.0),
+                    transform: Transform::from_xyz(0.0, 0.1, 0.0),
                     point_light: PointLight {
                         intensity: 0.0,
                         color: Color::ORANGE,
