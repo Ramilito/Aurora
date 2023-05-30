@@ -68,7 +68,7 @@ pub fn solved(
             for (_plate, _name, children) in q_parent.get(entity).iter() {
                 for &child in children.iter() {
                     if let Ok(mut ligth) = q_child.get_mut(child) {
-                        ligth.0.intensity = 1000.0;
+                        ligth.0.intensity = 100.0;
                     }
                 }
             }
