@@ -3,7 +3,7 @@ use bevy_rapier3d::prelude::*;
 
 use crate::game::loading::MyAssets;
 
-use super::components::Player;
+use super::components::{Jumper, Player};
 
 pub const PLAYER_SPEED: f32 = 2.0;
 
@@ -33,9 +33,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
             .insert(RigidBody::KinematicVelocityBased)
             .insert(collider.clone())
             .insert(Velocity::default())
-            .insert(Jumper {
-                is_jumping: false,
-            })
+            .insert(Jumper { is_jumping: false })
             .insert(KinematicCharacterController {
                 offset: CharacterLength::Absolute(0.05),
                 ..default()
@@ -56,6 +54,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
 pub fn player_movement(
     time: Res<Time>,
     keyboard_input: Res<Input<KeyCode>>,
+    mut players: Query<(&mut Jumper, &mut Velocity), With<Player>>,
     mut controllers: Query<&mut KinematicCharacterController>,
 ) {
     for mut controller in controllers.iter_mut() {
@@ -74,8 +73,19 @@ pub fn player_movement(
             direction += Vec3::new(1.0, -1.0, 1.0);
         }
 
-        if !keyboard_input.any_pressed([KeyCode::Right, KeyCode::Left, KeyCode::Up, KeyCode::Down])
-        {
+        let (mut jumper, mut velocity) = players.single_mut();
+        if keyboard_input.pressed(KeyCode::Space) {
+            velocity.linvel.y = 1.0;
+            jumper.is_jumping = true;
+        }
+
+        if !keyboard_input.any_pressed([
+            KeyCode::Right,
+            KeyCode::Left,
+            KeyCode::Up,
+            KeyCode::Down,
+            KeyCode::Space,
+        ]) {
             direction += Vec3::new(0.0, -1.0, 0.0);
         }
 
