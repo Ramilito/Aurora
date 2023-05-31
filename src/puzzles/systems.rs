@@ -37,12 +37,25 @@ pub fn setup(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
     mut images: ResMut<Assets<Image>>,
+    mut _my_assets: ResMut<MyAssets>,
     mut commands: Commands,
 ) {
     let debug_material = materials.add(StandardMaterial {
         base_color_texture: Some(images.add(uv_debug_texture())),
         ..default()
     });
+
+    commands
+        .spawn((
+            Sword,
+            SceneBundle {
+                scene: _my_assets.sword.clone(),
+                ..default()
+            },
+        ))
+        .insert(RigidBody::Fixed)
+        .insert(Collider::cuboid(0.1, 0.3, 0.1))
+        .insert(TransformBundle::from(Transform::from_xyz(0.0, 2.5, 0.5)));
 
     commands
         .spawn((

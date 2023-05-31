@@ -52,18 +52,11 @@ pub fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 pub fn load_assets(
     _my_assets: Res<MyAssets>,
-    mut commands: Commands,
+    commands: Commands,
     meshes: ResMut<Assets<Mesh>>,
-    asset_server: Res<AssetServer>,
     asset_gltf: Res<Assets<Gltf>>,
     assets_gltfmesh: Res<Assets<GltfMesh>>,
 ) {
-    commands
-        .spawn(SceneBundle {
-            scene: asset_server.load("models/sword.gltf#Scene0"),
-            ..default()
-        })
-        .insert(TransformBundle::from(Transform::from_xyz(0.0, 2.5, 0.5)));
     load_map(_my_assets, commands, meshes, asset_gltf, assets_gltfmesh);
 }
 

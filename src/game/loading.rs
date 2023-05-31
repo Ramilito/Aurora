@@ -48,8 +48,9 @@ pub struct MyAssets {
     #[asset(path = "models/barrel.gltf#Scene0")]
     pub barrel: Handle<Scene>,
     pub barrel_colliders: Vec<(Collider, Transform)>,
-    // #[asset(path = "models/platform.gltf")]
-    // pub platform_gltf: Handle<Gltf>,
+
+    #[asset(path = "models/sword.gltf#Scene0")]
+    pub sword: Handle<Scene>,
 }
 
 fn add_colliders(

@@ -16,3 +16,6 @@ pub struct Plate;
 
 #[derive(Component, Debug)]
 pub struct Light;
+
+#[derive(Component, Debug)]
+pub struct Sword;
