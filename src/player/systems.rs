@@ -5,7 +5,7 @@ use crate::game::loading::MyAssets;
 
 use super::components::{Jumper, Player};
 
-pub const PLAYER_SPEED: f32 = 2.0;
+pub const PLAYER_SPEED: f32 = 3.0;
 
 #[derive(Bundle)]
 pub struct PlayerBundle {
@@ -35,7 +35,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
             .insert(Velocity::default())
             .insert(Jumper { is_jumping: false })
             .insert(KinematicCharacterController {
-                offset: CharacterLength::Absolute(0.05),
+                offset: CharacterLength::Absolute(0.07),
                 ..default()
             })
             .insert(TransformBundle::from_transform(transform.clone()));
