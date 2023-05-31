@@ -5,7 +5,7 @@ use super::{
     state_machine::{self, Idle},
 };
 use bevy::prelude::*;
-use bevy_rapier3d::prelude::{Collider, GravityScale, RigidBody};
+use bevy_rapier3d::prelude::{Collider, RigidBody};
 use seldom_state::prelude::StateMachine;
 
 #[derive(Bundle)]
@@ -52,7 +52,6 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
         .spawn((NpcBundle::new(_my_assets.npc_emo.clone()),))
         .insert(Collider::cuboid(0.3, 1.0, 0.6))
         .insert(RigidBody::Dynamic)
-        .insert(GravityScale(100.0))
         .insert(TransformBundle::from(
             Transform::from_xyz(0.0, 2.0, 16.0).with_scale(Vec3::new(0.7, 0.7, 0.7)),
         ));
