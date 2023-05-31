@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use seldom_state::prelude::*;
 
 pub(crate) fn get_state_machine() -> StateMachine {
-    let plate_pressed = PlatePressed { range: 0.5 };
+    let plate_pressed = PlatePressed { range: 0.8 };
     StateMachine::default()
         .trans::<Unsolved>(plate_pressed, Solved)
         .trans::<Solved>(plate_pressed.not(), Unsolved)
@@ -69,7 +69,7 @@ pub fn solved(
             for (_plate, name, children) in parent_q.get(entity).iter() {
                 if name.contains("left") {
                     let mut sword = sword_q.get_single_mut().unwrap();
-                    sword.translation = Vec3::new(0.0, 2.0, 3.0);
+                    sword.translation = Vec3::new(0.0, 1.5, 3.0);
                 }
                 for &child in children.iter() {
                     if let Ok(mut light) = child_q.get_mut(child) {
