@@ -59,17 +59,18 @@ pub fn unsolved(
 
 pub fn solved(
     mut done: Local<bool>,
-    mut sword_q: Query<&mut Transform, With<Sword>>,
     mut child_q: Query<(&mut PointLight, With<Light>)>,
     solved: Query<(Entity, &Solved)>,
     parent_q: Query<(&Plate, &Name, &Children)>,
+    mut sword_q: Query<&mut Transform, With<Sword>>,
 ) {
     if !*done {
         for (entity, _solved) in &solved {
             for (_plate, name, children) in parent_q.get(entity).iter() {
                 if name.contains("left") {
-                    let mut sword = sword_q.get_single_mut().unwrap();
-                    sword.translation = Vec3::new(0.0, 1.5, 3.0);
+                    if let Ok(mut transform) = sword_q.get_single_mut() {
+                        transform.translation = Vec3::new(0.0, 1.5, 3.0);
+                    }
                 }
                 for &child in children.iter() {
                     if let Ok(mut light) = child_q.get_mut(child) {
