@@ -34,6 +34,7 @@ fn main() {
         //.add_plugin(EguiPlugin)
         .add_plugin(StateMachinePlugin)
         .add_plugin(LoadingPlugin)
+        .add_plugin(menu::MenuPlugin)
         .add_plugin(collision::CollisionPlugin)
         .add_plugin(camera::CameraPlugin)
         .add_plugin(InGamePlugin)
