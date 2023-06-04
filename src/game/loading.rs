@@ -82,6 +82,6 @@ fn add_colliders(
     )
     .unwrap();
 
-    app_state.set(AppState::InMenu);
+    app_state.set(AppState::InGame);
 }
 use bevy::gltf::Gltf;
