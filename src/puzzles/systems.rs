@@ -47,18 +47,6 @@ pub fn setup(
 
     commands
         .spawn((
-            Sword,
-            SceneBundle {
-                scene: _my_assets.sword.clone(),
-                ..default()
-            },
-        ))
-        .insert(RigidBody::Fixed)
-        .insert(Collider::cuboid(0.1, 0.3, 0.1))
-        .insert(TransformBundle::from(Transform::from_xyz(0.0, 2.5, 0.5)));
-
-    commands
-        .spawn((
             Box,
             Name::new("left"),
             PbrBundle {
@@ -69,7 +57,8 @@ pub fn setup(
         ))
         .insert(Collider::cuboid(0.3, 0.3, 0.3))
         .insert(RigidBody::Dynamic)
-        .insert(TransformBundle::from(Transform::from_xyz(0.0, 3.0, 14.0)))
+        // .insert(TransformBundle::from(Transform::from_xyz(0.0, 3.0, 14.0)))
+        .insert(TransformBundle::from(Transform::from_xyz(-3.0, 3.0, 3.0)))
         .insert(Restitution::coefficient(0.3))
         .insert(ColliderMassProperties::Density(1.0));
     commands
@@ -90,6 +79,30 @@ pub fn setup(
 }
 
 pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
+    commands
+        .spawn((
+            Sword,
+            SceneBundle {
+                scene: _my_assets.sword.clone(),
+                ..default()
+            },
+        ))
+        .insert(RigidBody::KinematicPositionBased)
+        .insert(KinematicCharacterController { ..default() })
+        .insert(Collider::cuboid(0.1, 0.1, 0.1))
+        .insert(TransformBundle::from(
+            Transform::from_scale(Vec3::new(0.25, 0.25, 0.25))
+                .with_translation(Vec3::new(0.0, 1.8, 0.5)),
+        ))
+        .with_children(|children| {
+            for (collider, transform) in _my_assets.sword_colliders.iter() {
+                children.spawn((
+                    collider.clone(),
+                    TransformBundle::from(transform.clone()),
+                ));
+            }
+        });
+
     commands
         .spawn(PlateBundle::new(
             _my_assets.platform.clone(),
