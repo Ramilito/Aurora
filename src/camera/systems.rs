@@ -1,10 +1,9 @@
 use bevy::{core_pipeline::bloom::BloomSettings, prelude::*};
 use bevy_panorbit_camera::PanOrbitCamera;
-
-use crate::player::components::Player;
 use std::f32::consts::TAU;
 
 use super::compontents::PlayerCamera;
+use crate::player::components::Player;
 
 pub fn setup(mut commands: Commands) {
     commands.spawn((
@@ -16,10 +15,13 @@ pub fn setup(mut commands: Commands) {
         Camera3dBundle {
             camera: Camera {
                 hdr: true,
+                order: 0,
                 ..default()
             },
+
             ..default()
         },
+        UiCameraConfig { show_ui: false },
         PanOrbitCamera {
             // Set focal point
             focus: Vec3::new(0.0, 1.0, 0.0),

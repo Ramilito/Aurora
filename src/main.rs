@@ -3,6 +3,7 @@ mod collision;
 mod components;
 mod game;
 mod map;
+mod menu;
 mod npc;
 mod player;
 mod puzzles;
@@ -35,6 +36,7 @@ fn main() {
         .add_plugin(collision::CollisionPlugin)
         .add_plugin(camera::CameraPlugin)
         .add_plugin(InGamePlugin)
+        .add_plugin(menu::MenuPlugin)
         .add_plugin(player::PlayerPlugin)
         .add_plugin(npc::NpcPlugin)
         .add_plugin(puzzles::PuzzlePlugin)
