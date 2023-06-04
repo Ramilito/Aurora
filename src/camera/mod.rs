@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 use bevy_panorbit_camera::PanOrbitCameraPlugin;
-mod compontents;
+pub mod compontents;
 mod systems;
 
 use self::systems::{setup, sync_player_camera};

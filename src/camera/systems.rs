@@ -4,8 +4,11 @@ use bevy_panorbit_camera::PanOrbitCamera;
 use crate::player::components::Player;
 use std::f32::consts::TAU;
 
+use super::compontents::PlayerCamera;
+
 pub fn setup(mut commands: Commands) {
     commands.spawn((
+        PlayerCamera,
         BloomSettings {
             intensity: 0.25, // the default is 0.3
             ..default()
