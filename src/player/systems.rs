@@ -35,7 +35,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
             .insert(Velocity::default())
             .insert(Jumper { is_jumping: false })
             .insert(KinematicCharacterController {
-                offset: CharacterLength::Absolute(0.07),
+                offset: CharacterLength::Absolute(0.09),
                 ..default()
             })
             .insert(TransformBundle::from_transform(transform.clone()));
