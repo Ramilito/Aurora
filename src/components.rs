@@ -6,4 +6,5 @@ pub enum AppState {
     AssetLoading,
     AssetLoaded,
     InGame,
+    InMenu
 }
