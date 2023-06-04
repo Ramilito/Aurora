@@ -55,9 +55,9 @@ pub fn player_movement(
     time: Res<Time>,
     keyboard_input: Res<Input<KeyCode>>,
     mut players: Query<(&mut Jumper, &mut Velocity), With<Player>>,
-    mut controllers: Query<&mut KinematicCharacterController>,
+    mut controllers: Query<&mut KinematicCharacterController, With<Player>>,
 ) {
-    for mut controller in controllers.iter_mut() {
+    if let Ok(mut controller) = controllers.get_single_mut() {
         let mut direction = Vec3::ZERO;
 
         if keyboard_input.pressed(KeyCode::Left) || keyboard_input.pressed(KeyCode::A) {
