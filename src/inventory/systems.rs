@@ -41,12 +41,12 @@ fn my_widget_render(
             <ElementBundle>
                 <KButtonBundle
                     styles={KStyle {
-                        left: Units::Stretch(1.0).into(),
-                        right: Units::Stretch(1.0).into(),
+                        left: Units::Stretch(0.5).into(),
+                        right: Units::Stretch(0.5).into(),
                         ..Default::default()
                     }}
                     button={KButton {
-                        text: "Show Window".into(),
+                        text: "Inventory".into(),
                     }}
                     on_event={OnEvent::new(
                         move |In(_entity): In<Entity>,
@@ -74,7 +74,7 @@ fn my_widget_render(
                             }}
                         >
                             <KButtonBundle
-                                button={KButton { text: "Hide Window".into() }}
+                                button={KButton { text: "X".into() }}
                                 on_event={OnEvent::new(
                                     move |In(_entity): In<Entity>,
                                     mut event: ResMut<KEvent>,
