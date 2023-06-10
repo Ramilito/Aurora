@@ -66,6 +66,7 @@ fn add_colliders(
 
     _my_assets.player_colliders = get_scene_colliders(
         &mut meshes,
+ 
         &mut scenes.get_mut(&_my_assets.player).unwrap().world,
     )
     .unwrap();
