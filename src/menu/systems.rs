@@ -1,242 +1,321 @@
-use bevy::{app::AppExit, prelude::*, core_pipeline::clear_color::ClearColorConfig};
-use kayak_ui::prelude::{widgets::*, *};
+//! This example will display a simple menu using Bevy UI where you can start a new game,
+//! change some settings or quit. There is no actual game, it will just display the current
+//! settings for 5 seconds before going back to the menu.
 
-use crate::components::AppState;
+use crate::AppState;
+use bevy::app::AppExit;
+use bevy::core_pipeline::clear_color::ClearColorConfig;
+use bevy::prelude::*;
 
-#[derive(Default, Clone, PartialEq, Component)]
-pub struct MenuButton {
-    text: String,
-}
+const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 
-impl Widget for MenuButton {}
+// One of the two settings that can be set through the menu. It will be a resource in the app
+#[derive(Resource, Debug, Component, PartialEq, Eq, Clone, Copy)]
+pub struct Volume(u32);
 
-#[derive(Bundle)]
-pub struct MenuButtonBundle {
-    button: MenuButton,
-    styles: KStyle,
-    on_event: OnEvent,
-    widget_name: WidgetName,
-}
+pub fn setup(mut commands: Commands) {
 
-impl Default for MenuButtonBundle {
-    fn default() -> Self {
-        Self {
-            button: Default::default(),
-            styles: KStyle {
-                bottom: Units::Pixels(20.0).into(),
-                cursor: KCursorIcon(CursorIcon::Hand).into(),
-                ..Default::default()
-            },
-            on_event: OnEvent::default(),
-            widget_name: MenuButton::default().get_name(),
-        }
-    }
-}
-
-fn menu_button_render(
-    In(entity): In<Entity>,
-    widget_context: Res<KayakWidgetContext>,
-    mut commands: Commands,
-    asset_server: Res<AssetServer>,
-    menu_button_query: Query<&MenuButton>,
-    state_query: Query<&ButtonState>,
-) -> bool {
-    let state_entity =
-        widget_context.use_state(&mut commands, entity, ButtonState { hovering: false });
-
-    let button_text = menu_button_query.get(entity).unwrap().text.clone();
-    let button_image = asset_server.load("menu/button.png");
-    let button_image_hover = asset_server.load("menu/button-hover.png");
-
-    let on_event = OnEvent::new(
-        move |In(_entity): In<Entity>,
-              mut event: ResMut<KEvent>,
-              mut query: Query<&mut ButtonState>| {
-            if let Ok(mut button) = query.get_mut(state_entity) {
-                match event.event_type {
-                    EventType::MouseIn(..) => {
-                        event.stop_propagation();
-                        button.hovering = true;
-                    }
-                    EventType::MouseOut(..) => {
-                        button.hovering = false;
-                    }
-                    _ => {}
-                }
-            }
-        },
-    );
-
-    if let Ok(button_state) = state_query.get(state_entity) {
-        let button_image_handle = if button_state.hovering {
-            button_image_hover
-        } else {
-            button_image
-        };
-
-        let parent_id = Some(entity);
-        rsx! {
-            <NinePatchBundle
-                nine_patch={NinePatch {
-                    handle: button_image_handle,
-                    border: Edge::all(10.0),
-                }}
-                styles={KStyle {
-                    width: Units::Stretch(1.0).into(),
-                    height: Units::Pixels(40.0).into(),
-                    bottom: Units::Pixels(30.0).into(),
-                    left: Units::Pixels(50.0).into(),
-                    right: Units::Pixels(50.0).into(),
-                    ..KStyle::default()
-                }}
-                on_event={on_event}
-            >
-                <TextWidgetBundle
-                    styles={KStyle {
-                        top: Units::Stretch(1.0).into(),
-                        bottom: Units::Stretch(1.0).into(),
-                        ..Default::default()
-                    }}
-                    text={TextProps {
-                        alignment: Alignment::Middle,
-                        content: button_text,
-                        size: 28.0,
-                        ..Default::default()
-                    }}
-                />
-            </NinePatchBundle>
-        };
-    }
-    true
-}
-
-#[derive(Default, Resource)]
-pub struct PreloadResource {
-    images: Vec<Handle<Image>>,
-}
-
-#[derive(Default, Component)]
-pub struct MenuCamera;
-
-pub fn startup(
-    mut commands: Commands,
-    mut font_mapping: ResMut<FontMapping>,
-    asset_server: Res<AssetServer>,
-    mut preload_resource: ResMut<PreloadResource>,
-) {
-    let camera_entity = commands
-        .spawn((
+        commands.spawn((
             Camera2dBundle {
                 camera: Camera {
                     hdr: true,
                     order: 3,
                     ..default()
                 },
-
                 camera_2d: Camera2d {
                     clear_color: ClearColorConfig::None,
                     ..default()
                 },
                 ..default()
             },
-            CameraUIKayak,
-            MenuCamera,
-        ))
-        .id();
+        )) ;
+}
 
-    font_mapping.set_default(asset_server.load("lato-light.kttf"));
+mod splash {
+    use bevy::prelude::*;
 
-    let mut widget_context = KayakRootContext::new(camera_entity);
-    widget_context.add_plugin(KayakWidgetsContextPlugin);
-    widget_context.add_widget_data::<MenuButton, ButtonState>();
-    widget_context.add_widget_system(
-        MenuButton::default().get_name(),
-        widget_update::<MenuButton, ButtonState>,
-        menu_button_render,
-    );
+    use crate::components::AppState;
 
-    let panel1_image = asset_server.load("menu/panel1.png");
-    let logo_image = asset_server.load("menu/logo.png");
-    let kayak_image = asset_server.load("menu/kayak.png");
-    let button_image = asset_server.load("menu/button.png");
-    let button_image_hover = asset_server.load("menu/button-hover.png");
+    use super::despawn_screen;
 
-    preload_resource.images.extend(vec![
-        panel1_image.clone(),
-        logo_image.clone(),
-        button_image,
-        button_image_hover,
-    ]);
+    // This plugin will display a splash screen with Bevy logo for 1 second before switching to the menu
+    pub struct SplashPlugin;
 
-    let handle_click_close = OnEvent::new(
-        move |In(_entity): In<Entity>, event: ResMut<KEvent>, mut exit: EventWriter<AppExit>| {
-            if let EventType::Click(..) = event.event_type {
-                exit.send(AppExit);
-            }
+    impl Plugin for SplashPlugin {
+        fn build(&self, app: &mut App) {
+            // As this plugin is managing the splash screen, it will focus on the state `GameState::Splash`
+            app
+                // When entering the state, spawn everything needed for this screen
+                .add_system(splash_setup.in_schedule(OnEnter(AppState::InGame)))
+                // While in this state, run the `countdown` system
+                .add_system(countdown.in_set(OnUpdate(AppState::InGame)))
+                // When exiting the state, despawn everything that was spawned for this screen
+                .add_system(despawn_screen::<OnSplashScreen>.in_schedule(OnExit(AppState::InGame)));
+        }
+    }
+
+    // Tag component used to tag entities added on the splash screen
+    #[derive(Component)]
+    struct OnSplashScreen;
+
+    // Newtype to use a `Timer` for this screen as a resource
+    #[derive(Resource, Deref, DerefMut)]
+    struct SplashTimer(Timer);
+
+    fn splash_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+        let icon = asset_server.load("branding/icon.png");
+        // Display the logo
+        commands
+            .spawn((
+                NodeBundle {
+                    style: Style {
+                        align_items: AlignItems::Center,
+                        justify_content: JustifyContent::Center,
+                        size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+                        ..default()
+                    },
+                    ..default()
+                },
+                OnSplashScreen,
+            ))
+            .with_children(|parent| {
+                parent.spawn(ImageBundle {
+                    style: Style {
+                        // This will set the logo to be 200px wide, and auto adjust its height
+                        size: Size::new(Val::Px(200.0), Val::Auto),
+                        ..default()
+                    },
+                    image: UiImage::new(icon),
+                    ..default()
+                });
+            });
+        // Insert the timer as a resource
+        commands.insert_resource(SplashTimer(Timer::from_seconds(1.0, TimerMode::Once)));
+    }
+
+    // Tick the timer, and change state when finished
+    fn countdown(
+        mut game_state: ResMut<NextState<AppState>>,
+        time: Res<Time>,
+        mut timer: ResMut<SplashTimer>,
+    ) {
+        if timer.tick(time.delta()).finished() {
+            game_state.set(AppState::InMenu);
+        }
+    }
+}
+
+// This plugin manages the menu, with 5 different screens:
+// - a main menu with "New Game", "Settings", "Quit"
+// - a settings menu with two submenus and a back button
+// - two settings screen with a setting that can be set and a back button
+
+// State used for the current menu screen
+#[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
+pub enum MenuState {
+    Main,
+    Settings,
+    SettingsDisplay,
+    SettingsSound,
+    #[default]
+    Disabled,
+}
+
+// Tag component used to tag entities added on the main menu screen
+#[derive(Component)]
+pub struct OnMainMenuScreen;
+
+// Tag component used to tag entities added on the settings menu screen
+#[derive(Component)]
+pub struct OnSettingsMenuScreen;
+
+// Tag component used to tag entities added on the display settings menu screen
+#[derive(Component)]
+pub struct OnDisplaySettingsMenuScreen;
+
+// Tag component used to tag entities added on the sound settings menu screen
+#[derive(Component)]
+pub struct OnSoundSettingsMenuScreen;
+
+const NORMAL_BUTTON: Color = Color::rgb(0.15, 0.15, 0.15);
+const HOVERED_BUTTON: Color = Color::rgb(0.25, 0.25, 0.25);
+const HOVERED_PRESSED_BUTTON: Color = Color::rgb(0.25, 0.65, 0.25);
+const PRESSED_BUTTON: Color = Color::rgb(0.35, 0.75, 0.35);
+
+// Tag component used to mark which setting is currently selected
+#[derive(Component)]
+pub struct SelectedOption;
+
+// All actions that can be triggered from a button click
+#[derive(Component)]
+pub enum MenuButtonAction {
+    Play,
+    Quit,
+}
+
+// This system handles changing all buttons color based on mouse interaction
+pub fn button_system(
+    mut interaction_query: Query<
+        (&Interaction, &mut BackgroundColor, Option<&SelectedOption>),
+        (Changed<Interaction>, With<Button>),
+    >,
+) {
+    for (interaction, mut color, selected) in &mut interaction_query {
+        *color = match (*interaction, selected) {
+            (Interaction::Clicked, _) | (Interaction::None, Some(_)) => PRESSED_BUTTON.into(),
+            (Interaction::Hovered, Some(_)) => HOVERED_PRESSED_BUTTON.into(),
+            (Interaction::Hovered, None) => HOVERED_BUTTON.into(),
+            (Interaction::None, None) => NORMAL_BUTTON.into(),
+        }
+    }
+}
+
+pub fn menu_setup(mut menu_state: ResMut<NextState<MenuState>>) {
+    menu_state.set(MenuState::Main);
+}
+
+pub fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+    let font = asset_server.load("fonts/FiraSans-Bold.ttf");
+    // Common style for all buttons on the screen
+    let button_style = Style {
+        size: Size::new(Val::Px(250.0), Val::Px(65.0)),
+        margin: UiRect::all(Val::Px(20.0)),
+        justify_content: JustifyContent::Center,
+        align_items: AlignItems::Center,
+        ..default()
+    };
+    let button_icon_style = Style {
+        size: Size::new(Val::Px(30.0), Val::Auto),
+        // This takes the icons out of the flexbox flow, to be positioned exactly
+        position_type: PositionType::Absolute,
+        // The icon will be close to the left border of the button
+        position: UiRect {
+            left: Val::Px(10.0),
+            right: Val::Auto,
+            top: Val::Auto,
+            bottom: Val::Auto,
         },
-    );
-
-    let handle_play = OnEvent::new(
-        move |In(_entity): In<Entity>,
-              event: ResMut<KEvent>,
-              mut app_state: ResMut<NextState<AppState>>| {
-            if let EventType::Click(..) = event.event_type {
-                app_state.set(AppState::InGame);
-            }
-        },
-    );
-    let parent_id = None;
-    rsx! {
-        <KayakAppBundle>
-            <NinePatchBundle
-                nine_patch={NinePatch {
-                    handle: panel1_image,
-                    border: Edge::all(25.0),
-                }}
-                styles={KStyle {
-                    width: Units::Pixels(350.0).into(),
-                    height: Units::Pixels(512.0).into(),
-                    left: Units::Stretch(1.0).into(),
-                    right: Units::Stretch(1.0).into(),
-                    top: Units::Stretch(1.0).into(),
-                    bottom: Units::Stretch(1.0).into(),
-                    padding: Edge::new(
-                        Units::Pixels(20.0),
-                        Units::Pixels(20.0),
-                        Units::Pixels(50.0),
-                        Units::Pixels(20.0),
-                    ).into(),
-                    ..KStyle::default()
-                }}
-            >
-                <KImageBundle
-                    image={KImage(kayak_image)}
-                    styles={KStyle {
-                        width: Units::Pixels(310.0).into(),
-                        height: Units::Pixels(104.0).into(),
-                        top: Units::Pixels(25.0).into(),
-                        bottom: Units::Pixels(25.0).into(),
-                        ..KStyle::default()
-                    }}
-                />
-                <KImageBundle
-                    image={KImage(logo_image)}
-                    styles={KStyle {
-                        width: Units::Pixels(310.0).into(),
-                        height: Units::Pixels(78.0).into(),
-                        bottom: Units::Stretch(1.0).into(),
-                        ..KStyle::default()
-                    }}
-                />
-                <MenuButtonBundle button={MenuButton { text: "Play".into() }} on_event={handle_play} />
-                <MenuButtonBundle button={MenuButton { text: "Options".into() }} />
-                <MenuButtonBundle
-                    button={MenuButton { text: "Quit".into() }}
-                    on_event={handle_click_close}
-                />
-            </NinePatchBundle>
-        </KayakAppBundle>
+        ..default()
+    };
+    let button_text_style = TextStyle {
+        font: font.clone(),
+        font_size: 40.0,
+        color: TEXT_COLOR,
     };
 
-    commands.spawn((widget_context, EventDispatcher::default()));
+    commands
+        .spawn((
+            NodeBundle {
+                style: Style {
+                    size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+                    align_items: AlignItems::Center,
+                    justify_content: JustifyContent::Center,
+                    ..default()
+                },
+                ..default()
+            },
+            OnMainMenuScreen,
+        ))
+        .with_children(|parent| {
+            parent
+                .spawn(NodeBundle {
+                    style: Style {
+                        flex_direction: FlexDirection::Column,
+                        align_items: AlignItems::Center,
+                        ..default()
+                    },
+                    background_color: Color::CRIMSON.into(),
+                    ..default()
+                })
+                .with_children(|parent| {
+                    // Display the game name
+                    parent.spawn(
+                        TextBundle::from_section(
+                            "Bevy Game Menu UI",
+                            TextStyle {
+                                font: font.clone(),
+                                font_size: 80.0,
+                                color: TEXT_COLOR,
+                            },
+                        )
+                        .with_style(Style {
+                            margin: UiRect::all(Val::Px(50.0)),
+                            ..default()
+                        }),
+                    );
+
+                    // Display three buttons for each action available from the main menu:
+                    // - new game
+                    // - quit
+                    parent
+                        .spawn((
+                            ButtonBundle {
+                                style: button_style.clone(),
+                                background_color: NORMAL_BUTTON.into(),
+                                ..default()
+                            },
+                            MenuButtonAction::Play,
+                        ))
+                        .with_children(|parent| {
+                            let icon = asset_server.load("textures/Game Icons/right.png");
+                            parent.spawn(ImageBundle {
+                                style: button_icon_style.clone(),
+                                image: UiImage::new(icon),
+                                ..default()
+                            });
+                            parent.spawn(TextBundle::from_section(
+                                "New Game",
+                                button_text_style.clone(),
+                            ));
+                        });
+                    parent
+                        .spawn((
+                            ButtonBundle {
+                                style: button_style,
+                                background_color: NORMAL_BUTTON.into(),
+                                ..default()
+                            },
+                            MenuButtonAction::Quit,
+                        ))
+                        .with_children(|parent| {
+                            let icon = asset_server.load("textures/Game Icons/exitRight.png");
+                            parent.spawn(ImageBundle {
+                                style: button_icon_style,
+                                image: UiImage::new(icon),
+                                ..default()
+                            });
+                            parent.spawn(TextBundle::from_section("Quit", button_text_style));
+                        });
+                });
+        });
+}
+
+pub fn menu_action(
+    interaction_query: Query<
+        (&Interaction, &MenuButtonAction),
+        (Changed<Interaction>, With<Button>),
+    >,
+    mut app_exit_events: EventWriter<AppExit>,
+    mut menu_state: ResMut<NextState<MenuState>>,
+    mut game_state: ResMut<NextState<AppState>>,
+) {
+    for (interaction, menu_button_action) in &interaction_query {
+        if *interaction == Interaction::Clicked {
+            match menu_button_action {
+                MenuButtonAction::Quit => app_exit_events.send(AppExit),
+                MenuButtonAction::Play => {
+                    game_state.set(AppState::InGame);
+                    menu_state.set(MenuState::Disabled);
+
+                }
+            }
+        }
+    }
+}
+
+// Generic system that takes a component as a parameter, and will despawn all entities with that component
+pub fn despawn_screen<T: Component>(to_despawn: Query<Entity, With<T>>, mut commands: Commands) {
+    for entity in &to_despawn {
+        commands.entity(entity).despawn_recursive();
+    }
 }
