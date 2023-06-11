@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 mod components;
-mod state_machine;
 mod level_one;
+mod state_machine;
 use crate::components::AppState;
 
 use self::{
@@ -15,6 +15,8 @@ impl Plugin for LevelsPlugin {
         app.add_state::<LevelState>()
             .add_system(level_one::setup.in_schedule(OnEnter(AppState::InGame)))
             .add_system(level_one::load_assets.in_schedule(OnEnter(AppState::InGame)))
+            .add_system(level_one::load_map.in_schedule(OnEnter(AppState::InGame)))
+            .add_system(level_one::load_puzzle.in_schedule(OnEnter(AppState::InGame)))
             .add_systems((solved, unsolved).in_set(OnUpdate(AppState::InGame)));
     }
 }
