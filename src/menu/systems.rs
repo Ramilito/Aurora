@@ -14,21 +14,18 @@ const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
 pub struct Volume(u32);
 
 pub fn setup(mut commands: Commands) {
-
-        commands.spawn((
-            Camera2dBundle {
-                camera: Camera {
-                    hdr: true,
-                    order: 3,
-                    ..default()
-                },
-                camera_2d: Camera2d {
-                    clear_color: ClearColorConfig::None,
-                    ..default()
-                },
-                ..default()
-            },
-        )) ;
+    commands.spawn((Camera2dBundle {
+        camera: Camera {
+            hdr: true,
+            order: 3,
+            ..default()
+        },
+        camera_2d: Camera2d {
+            clear_color: ClearColorConfig::None,
+            ..default()
+        },
+        ..default()
+    },));
 }
 
 mod splash {
@@ -224,14 +221,14 @@ pub fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
                         align_items: AlignItems::Center,
                         ..default()
                     },
-                    background_color: Color::CRIMSON.into(),
+                    background_color: Color::rgb(0.1, 0.4, 0.8).into(),
                     ..default()
                 })
                 .with_children(|parent| {
                     // Display the game name
                     parent.spawn(
                         TextBundle::from_section(
-                            "Bevy Game Menu UI",
+                            "Aurora's Adventures",
                             TextStyle {
                                 font: font.clone(),
                                 font_size: 80.0,
@@ -306,7 +303,6 @@ pub fn menu_action(
                 MenuButtonAction::Play => {
                     game_state.set(AppState::InGame);
                     menu_state.set(MenuState::Disabled);
-
                 }
             }
         }
