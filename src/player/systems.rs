@@ -5,7 +5,7 @@ use crate::game::loading::MyAssets;
 
 use super::components::{Jumper, Player};
 
-pub const PLAYER_SPEED: f32 = 3.0;
+pub const PLAYER_SPEED: f32 = 4.0;
 
 #[derive(Bundle)]
 pub struct PlayerBundle {
@@ -87,6 +87,10 @@ pub fn player_movement(
             KeyCode::Space,
         ]) {
             direction += Vec3::new(0.0, -1.0, 0.0);
+        }
+
+        if direction.length() > 0.0 {
+            direction = direction.normalize();
         }
 
         controller.translation = Some(direction * PLAYER_SPEED * time.delta_seconds());
