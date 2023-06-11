@@ -1,13 +1,16 @@
 mod systems;
 use bevy::prelude::*;
- 
-use crate::components::AppState;
+use kayak_ui::{prelude::KayakContextPlugin, widgets::KayakWidgets};
+
 use self::systems::startup;
+use crate::components::AppState;
 
 pub struct InventoryPlugin;
 
 impl Plugin for InventoryPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(startup.in_schedule(OnEnter(AppState::InGame)));
+        app.add_plugin(KayakContextPlugin)
+            .add_plugin(KayakWidgets)
+            .add_system(startup.in_schedule(OnEnter(AppState::InGame)));
     }
 }
