@@ -19,3 +19,11 @@ pub struct Light;
 
 #[derive(Component, Debug)]
 pub struct Sword;
+
+#[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
+pub enum LevelState {
+    CurrentLevel,
+    LevelTwo,
+    #[default]
+    LevelOne,
+}

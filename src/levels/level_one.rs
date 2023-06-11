@@ -96,10 +96,7 @@ pub fn load_assets(_my_assets: Res<MyAssets>, mut commands: Commands) {
         ))
         .with_children(|children| {
             for (collider, transform) in _my_assets.sword_colliders.iter() {
-                children.spawn((
-                    collider.clone(),
-                    TransformBundle::from(transform.clone()),
-                ));
+                children.spawn((collider.clone(), TransformBundle::from(transform.clone())));
             }
         });
 
