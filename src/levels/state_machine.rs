@@ -1,4 +1,4 @@
-use crate::puzzles::components::*;
+use crate::levels::components::*;
 use bevy::prelude::*;
 use seldom_state::prelude::*;
 

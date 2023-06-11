@@ -7,7 +7,7 @@ mod map;
 mod menu;
 mod npc;
 mod player;
-mod puzzles;
+mod levels;
 mod skymap;
 
 use bevy::prelude::*;
@@ -41,6 +41,6 @@ fn main() {
         .add_plugin(inventory::InventoryPlugin)
         .add_plugin(player::PlayerPlugin)
         .add_plugin(npc::NpcPlugin)
-        .add_plugin(puzzles::PuzzlePlugin)
+        .add_plugin(levels::LevelsPlugin)
         .run();
 }

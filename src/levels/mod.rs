@@ -9,9 +9,9 @@ use self::{
     state_machine::{solved, unsolved},
     systems::{load_assets, setup},
 };
-pub struct PuzzlePlugin;
+pub struct LevelsPlugin;
 
-impl Plugin for PuzzlePlugin {
+impl Plugin for LevelsPlugin {
     fn build(&self, app: &mut App) {
         app.add_system(setup.in_schedule(OnEnter(AppState::InGame)))
             .add_system(load_assets.in_schedule(OnEnter(AppState::InGame)))
