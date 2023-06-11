@@ -22,7 +22,7 @@ fn main() {
             DefaultPlugins
                 .set(WindowPlugin {
                     primary_window: Some(Window {
-                        title: String::from("Iso Staggered Example"),
+                        title: String::from("Aurora's Adventures"),
                         ..Default::default()
                     }),
                     ..default()
