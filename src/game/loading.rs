@@ -50,6 +50,10 @@ pub struct MyAssets {
     #[asset(path = "models/sword.gltf#Scene0")]
     pub sword: Handle<Scene>,
     pub sword_colliders: Vec<(Collider, Transform)>,
+
+    #[asset(path = "map/crystal.gltf#Scene0")]
+    pub crystal: Handle<Scene>,
+    pub crystal_colliders: Vec<(Collider, Transform)>,
 }
 
 fn add_colliders(
@@ -66,7 +70,6 @@ fn add_colliders(
 
     _my_assets.player_colliders = get_scene_colliders(
         &mut meshes,
- 
         &mut scenes.get_mut(&_my_assets.player).unwrap().world,
     )
     .unwrap();
@@ -83,6 +86,11 @@ fn add_colliders(
     )
     .unwrap();
 
+    _my_assets.crystal_colliders = get_scene_colliders(
+        &mut meshes,
+        &mut scenes.get_mut(&_my_assets.crystal).unwrap().world,
+    )
+    .unwrap();
     app_state.set(AppState::InMenu);
 }
 use bevy::gltf::Gltf;
