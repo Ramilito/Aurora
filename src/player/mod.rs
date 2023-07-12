@@ -10,7 +10,7 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(load_assets.in_schedule(OnEnter(AppState::InGame)))
-            .add_system(player_movement);
+        app.add_systems(OnEnter(AppState::InGame), load_assets)
+            .add_systems(Update, player_movement);
     }
 }

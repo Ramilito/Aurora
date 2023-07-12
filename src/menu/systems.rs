@@ -3,8 +3,10 @@
 //! settings for 5 seconds before going back to the menu.
 
 use crate::AppState;
+use bevy::a11y::accesskit::Size;
 use bevy::app::AppExit;
 use bevy::core_pipeline::clear_color::ClearColorConfig;
+use bevy::ecs::schedule::ScheduleLabel;
 use bevy::prelude::*;
 
 const TEXT_COLOR: Color = Color::rgb(0.9, 0.9, 0.9);
@@ -29,7 +31,7 @@ pub fn setup(mut commands: Commands) {
 }
 
 mod splash {
-    use bevy::prelude::*;
+    use bevy::{a11y::accesskit::Size, prelude::*};
 
     use crate::components::AppState;
 
@@ -43,11 +45,11 @@ mod splash {
             // As this plugin is managing the splash screen, it will focus on the state `GameState::Splash`
             app
                 // When entering the state, spawn everything needed for this screen
-                .add_system(splash_setup.in_schedule(OnEnter(AppState::InGame)))
+                .add_systems(OnEnter(AppState::InGame), splash_setup)
                 // While in this state, run the `countdown` system
-                .add_system(countdown.in_set(OnUpdate(AppState::InGame)))
+                .add_systems(Update, countdown.run_if(in_state(AppState::InGame)))
                 // When exiting the state, despawn everything that was spawned for this screen
-                .add_system(despawn_screen::<OnSplashScreen>.in_schedule(OnExit(AppState::InGame)));
+                .add_systems(OnExit(AppState::InGame), despawn_screen::<OnSplashScreen>);
         }
     }
 
@@ -68,7 +70,7 @@ mod splash {
                     style: Style {
                         align_items: AlignItems::Center,
                         justify_content: JustifyContent::Center,
-                        size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+                        width: Val::Percent(100.0),
                         ..default()
                     },
                     ..default()
@@ -79,7 +81,7 @@ mod splash {
                 parent.spawn(ImageBundle {
                     style: Style {
                         // This will set the logo to be 200px wide, and auto adjust its height
-                        size: Size::new(Val::Px(200.0), Val::Auto),
+                        width: Val::Px(200.0),
                         ..default()
                     },
                     image: UiImage::new(icon),
@@ -108,7 +110,7 @@ mod splash {
 // - two settings screen with a setting that can be set and a back button
 
 // State used for the current menu screen
-#[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
+#[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States, ScheduleLabel)]
 pub enum MenuState {
     Main,
     Settings,
@@ -159,7 +161,7 @@ pub fn button_system(
 ) {
     for (interaction, mut color, selected) in &mut interaction_query {
         *color = match (*interaction, selected) {
-            (Interaction::Clicked, _) | (Interaction::None, Some(_)) => PRESSED_BUTTON.into(),
+            (Interaction::Pressed, _) | (Interaction::None, Some(_)) => PRESSED_BUTTON.into(),
             (Interaction::Hovered, Some(_)) => HOVERED_PRESSED_BUTTON.into(),
             (Interaction::Hovered, None) => HOVERED_BUTTON.into(),
             (Interaction::None, None) => NORMAL_BUTTON.into(),
@@ -175,23 +177,23 @@ pub fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     let font = asset_server.load("fonts/FiraSans-Bold.ttf");
     // Common style for all buttons on the screen
     let button_style = Style {
-        size: Size::new(Val::Px(250.0), Val::Px(65.0)),
+        width: Val::Px(250.0),
         margin: UiRect::all(Val::Px(20.0)),
         justify_content: JustifyContent::Center,
         align_items: AlignItems::Center,
         ..default()
     };
     let button_icon_style = Style {
-        size: Size::new(Val::Px(30.0), Val::Auto),
+        width: Val::Px(30.0),
         // This takes the icons out of the flexbox flow, to be positioned exactly
         position_type: PositionType::Absolute,
         // The icon will be close to the left border of the button
-        position: UiRect {
-            left: Val::Px(10.0),
-            right: Val::Auto,
-            top: Val::Auto,
-            bottom: Val::Auto,
-        },
+        // position: UiRect {
+        //     left: Val::Px(10.0),
+        //     right: Val::Auto,
+        //     top: Val::Auto,
+        //     bottom: Val::Auto,
+        // },
         ..default()
     };
     let button_text_style = TextStyle {
@@ -204,7 +206,7 @@ pub fn main_menu_setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         .spawn((
             NodeBundle {
                 style: Style {
-                    size: Size::new(Val::Percent(100.0), Val::Percent(100.0)),
+                    width: Val::Percent(100.0),
                     align_items: AlignItems::Center,
                     justify_content: JustifyContent::Center,
                     ..default()
@@ -297,7 +299,7 @@ pub fn menu_action(
     mut game_state: ResMut<NextState<AppState>>,
 ) {
     for (interaction, menu_button_action) in &interaction_query {
-        if *interaction == Interaction::Clicked {
+        if *interaction == Interaction::Pressed {
             match menu_button_action {
                 MenuButtonAction::Quit => app_exit_events.send(AppExit),
                 MenuButtonAction::Play => {

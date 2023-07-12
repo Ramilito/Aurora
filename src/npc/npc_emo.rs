@@ -2,7 +2,7 @@ use crate::game::loading::MyAssets;
 
 use super::{
     components::{Animations, NpcEmo},
-    state_machine::{self, Idle},
+    // state_machine::{self, Idle},
 };
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::{Collider, RigidBody};
@@ -11,17 +11,16 @@ use seldom_state::prelude::StateMachine;
 #[derive(Bundle)]
 pub struct NpcBundle {
     pub npc: NpcEmo,
-    state_machine: StateMachine,
-    default_state: Idle,
-    #[bundle]
+    // state_machine: StateMachine,
+    // default_state: Idle,
     pub scene_bundle: SceneBundle,
 }
 
 impl NpcBundle {
     pub fn new(scene: Handle<Scene>) -> Self {
         NpcBundle {
-            state_machine: state_machine::get_state_machine(),
-            default_state: Idle,
+            // state_machine: state_machine::get_state_machine(),
+            // default_state: Idle,
             npc: NpcEmo,
             scene_bundle: SceneBundle { scene, ..default() },
         }

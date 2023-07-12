@@ -9,6 +9,6 @@ pub struct MapPlugin;
 
 impl Plugin for MapPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(startup);
+        app.add_systems(Startup, startup);
     }
 }

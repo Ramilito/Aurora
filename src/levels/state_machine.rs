@@ -9,7 +9,7 @@ pub(crate) fn get_state_machine() -> StateMachine {
         .trans::<Solved>(plate_pressed.not(), Unsolved)
 }
 
-#[derive(Clone, Copy, FromReflect, Reflect)]
+#[derive(Clone, Copy)]
 pub struct PlatePressed {
     range: f32,
 }

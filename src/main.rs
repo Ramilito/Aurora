@@ -2,16 +2,16 @@ mod camera;
 mod collision;
 mod components;
 mod game;
-mod inventory;
+// mod inventory;
+mod levels;
 mod map;
 mod menu;
 mod npc;
 mod player;
-mod levels;
 mod skymap;
 
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
+// use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use components::AppState;
 use game::{ingame::InGamePlugin, loading::LoadingPlugin};
 use seldom_state::StateMachinePlugin;
@@ -30,17 +30,19 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_state::<AppState>()
-        .add_plugin(WorldInspectorPlugin::new())
+        // .add_plugin(WorldInspectorPlugin::new())
         //.add_plugin(EguiPlugin)
-        .add_plugin(StateMachinePlugin)
-        .add_plugin(LoadingPlugin)
-        .add_plugin(menu::MenuPlugin)
-        .add_plugin(collision::CollisionPlugin)
-        .add_plugin(camera::CameraPlugin)
-        .add_plugin(InGamePlugin)
-        .add_plugin(inventory::InventoryPlugin)
-        .add_plugin(player::PlayerPlugin)
-        .add_plugin(npc::NpcPlugin)
-        .add_plugin(levels::LevelsPlugin)
+        // .add_plugin(StateMachinePlugin)
+        .add_plugins((
+            LoadingPlugin,
+            menu::MenuPlugin,
+            collision::CollisionPlugin,
+            camera::CameraPlugin,
+            InGamePlugin,
+            player::PlayerPlugin,
+            npc::NpcPlugin,
+            levels::LevelsPlugin,
+        ))
+        // .add_plugin(inventory::InventoryPlugin)
         .run();
 }

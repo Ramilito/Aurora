@@ -1,4 +1,5 @@
-use super::{components::*, state_machine};
+use super::{components::*};
+// use super::state_machine;
 use crate::game::loading::MyAssets;
 use bevy::{
     gltf::{Gltf, GltfMesh},
@@ -12,18 +13,17 @@ use seldom_state::prelude::StateMachine;
 pub struct PlateBundle {
     pub plate: Plate,
     name: Name,
-    #[bundle]
     scene_bundle: SceneBundle,
-    default_state: Unsolved,
-    state_machine: StateMachine,
+    // default_state: Unsolved,
+    // state_machine: StateMachine,
 }
 
 impl PlateBundle {
     pub fn new(scene: Handle<Scene>, transform: Transform, name: &str) -> Self {
         return PlateBundle {
             name: Name::new(name.to_string()),
-            state_machine: state_machine::get_state_machine(),
-            default_state: Unsolved,
+            // state_machine: state_machine::get_state_machine(),
+            // default_state: Unsolved,
             plate: Plate,
             scene_bundle: SceneBundle {
                 scene,
