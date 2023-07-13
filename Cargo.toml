@@ -8,7 +8,7 @@ bevy = { version = "0.11.0", features=["jpeg"] }
 # bevy-inspector-egui = "0.18.3"
 bevy_asset_loader = {git = "https://github.com/NiklasEi/bevy_asset_loader.git", branch = "bevy_main"}
 bevy_egui = "0.21.0"
-# bevy_panorbit_camera = "0.4.1"
+bevy_panorbit_camera = { git = "https://github.com/Plonq/bevy_panorbit_camera.git", branch = "bevy-0.11"  }
 bevy_rapier3d = { version = "*", features = [ "debug-render-3d" ] }
 seldom_state = "0.6.1"
 bevy_gltf_collider = {git = "https://github.com/Ramilito/bevy_gltf_collider.git"}
