@@ -13,7 +13,7 @@ impl Plugin for LoadingPlugin {
             LoadingState::new(AppState::AssetLoading).continue_to_state(AppState::AssetLoaded),
         )
         .add_collection_to_loading_state::<_, MyAssets>(AppState::AssetLoading)
-        .add_system(add_colliders.in_schedule(OnEnter(AppState::AssetLoaded)));
+        .add_systems(OnEnter(AppState::AssetLoaded), add_colliders);
     }
 }
 

@@ -22,7 +22,7 @@ pub struct Idle;
 #[component(storage = "SparseSet")]
 pub struct InDialog;
 
-#[derive(Clone, Copy, FromReflect, Reflect)]
+#[derive(Clone, Copy, Reflect)]
 pub struct NearPlayer {
     range: f32,
 }

@@ -11,6 +11,6 @@ impl Plugin for InventoryPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugin(KayakContextPlugin)
             .add_plugin(KayakWidgets)
-            .add_system(startup.in_schedule(OnEnter(AppState::InGame)));
+            .add_systems(OnEnter(AppState::InGame), startup);
     }
 }

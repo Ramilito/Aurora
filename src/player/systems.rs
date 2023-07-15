@@ -10,7 +10,6 @@ pub const PLAYER_SPEED: f32 = 4.0;
 #[derive(Bundle)]
 pub struct PlayerBundle {
     pub player: Player,
-    #[bundle]
     pub scene_bundle: SceneBundle,
 }
 

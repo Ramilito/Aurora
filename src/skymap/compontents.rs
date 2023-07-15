@@ -1,7 +1,7 @@
 use bevy::{
     pbr::{MaterialPipeline, MaterialPipelineKey},
     prelude::{Handle, Image, Material},
-    reflect::TypeUuid,
+    reflect::{Reflect, TypeUuid},
     render::{
         mesh::MeshVertexBufferLayout,
         render_asset::RenderAssets,
@@ -17,7 +17,7 @@ use bevy::{
     },
 };
 
-#[derive(Debug, Clone, TypeUuid)]
+#[derive(Debug, Clone, TypeUuid, Reflect)]
 #[uuid = "9509a0f8-3c05-48ee-a13e-a93226c7f488"]
 pub struct CubemapMaterial {
     pub base_color_texture: Option<Handle<Image>>,
@@ -47,13 +47,9 @@ impl AsBindGroup for CubemapMaterial {
         images: &RenderAssets<Image>,
         _fallback_image: &FallbackImage,
     ) -> Result<PreparedBindGroup<Self::Data>, AsBindGroupError> {
-        let base_color_texture = self
-            .base_color_texture
-            .as_ref()
-            .ok_or(AsBindGroupError::RetryNextUpdate)?;
-        let image = images
-            .get(base_color_texture)
-            .ok_or(AsBindGroupError::RetryNextUpdate)?;
+        let base_color_texture =
+            self.base_color_texture.as_ref().ok_or(AsBindGroupError::RetryNextUpdate)?;
+        let image = images.get(base_color_texture).ok_or(AsBindGroupError::RetryNextUpdate)?;
         let bind_group = render_device.create_bind_group(&BindGroupDescriptor {
             entries: &[
                 BindGroupEntry {

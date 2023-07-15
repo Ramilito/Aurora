@@ -13,7 +13,6 @@ pub struct NpcBundle {
     pub npc: NpcEmo,
     state_machine: StateMachine,
     default_state: Idle,
-    #[bundle]
     pub scene_bundle: SceneBundle,
 }
 

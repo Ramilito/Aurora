@@ -23,12 +23,9 @@ pub fn setup(mut commands: Commands) {
         },
         UiCameraConfig { show_ui: false },
         PanOrbitCamera {
-            // Set focal point
-            focus: Vec3::new(0.0, 1.0, 0.0),
-            // Set the starting position
-            alpha: TAU / 8.0,
-            beta: TAU / 8.0,
-            radius: 10.0,
+            alpha: Some(TAU / 8.0),
+            beta: Some(TAU / 8.0),
+            radius: Some(10.0),
             // Set limits on the position
             alpha_upper_limit: Some(TAU / 4.0),
             alpha_lower_limit: Some(-TAU / 4.0),
@@ -43,7 +40,6 @@ pub fn setup(mut commands: Commands) {
             // Blender-like key bindings
             button_orbit: MouseButton::Left,
             button_pan: MouseButton::Left,
-            modifier_pan: Some(KeyCode::LShift),
             // Reverse the zoom direction
             reversed_zoom: true,
             // Makes sure it's enabled (this is default)
@@ -62,7 +58,7 @@ pub fn sync_player_camera(
     let delta = player.translation - camera.focus;
 
     if delta != Vec3::ZERO {
-        camera.focus = player.translation;
+        camera.target_focus = player.translation;
         camera_transform.translation += delta;
     }
 }

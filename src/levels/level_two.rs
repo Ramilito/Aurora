@@ -1,10 +1,7 @@
-use super::{components::*, state_machine};
+use super::components::*;
+use super::state_machine;
 use crate::game::loading::MyAssets;
-use bevy::{
-    gltf::{Gltf, GltfMesh},
-    prelude::*,
-    render::render_resource::{Extent3d, TextureDimension, TextureFormat},
-};
+use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
 
 pub fn setup(

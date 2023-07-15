@@ -6,8 +6,7 @@ pub struct InGamePlugin;
 
 impl Plugin for InGamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(load_assets.in_schedule(OnEnter(AppState::InGame)))
-            .add_startup_system(setup);
+        app.add_systems(OnEnter(AppState::InGame), load_assets).add_systems(Startup, setup);
     }
 }
 
