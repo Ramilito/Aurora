@@ -11,7 +11,7 @@ mod player;
 mod skymap;
 
 use bevy::prelude::*;
-// use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use components::AppState;
 use game::{ingame::InGamePlugin, loading::LoadingPlugin};
 use seldom_state::StateMachinePlugin;
@@ -30,9 +30,9 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_state::<AppState>()
-        // .add_plugin(WorldInspectorPlugin::new())
-        //.add_plugin(EguiPlugin)
-        // .add_plugin(StateMachinePlugin)
+        .add_plugins(WorldInspectorPlugin::new())
+        // .add_plugins(EguiPlugin)
+        .add_plugins(StateMachinePlugin)
         .add_plugins((
             LoadingPlugin,
             menu::MenuPlugin,

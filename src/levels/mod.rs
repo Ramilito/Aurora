@@ -2,12 +2,12 @@ use bevy::prelude::*;
 mod components;
 mod level_one;
 mod level_two;
-// mod state_machine;
+mod state_machine;
 use crate::components::AppState;
 
 use self::{
     components::LevelState,
-    // state_machine::{solved, unsolved},
+    state_machine::{solved, unsolved},
 };
 pub struct LevelsPlugin;
 
@@ -21,9 +21,9 @@ impl Plugin for LevelsPlugin {
                     level_one::load_assets,
                     level_one::load_map,
                     level_one::load_puzzle,
+                    level_two::load_map,
                 ),
             )
-            // .add_systems(Update, (solved, unsolved).in_set(AppState::InGame))
-            .add_systems(OnEnter(AppState::InGame), level_two::load_map);
+            .add_systems(Update, (solved, unsolved).in_set(AppState::InGame));
     }
 }

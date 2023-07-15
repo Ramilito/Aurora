@@ -3,7 +3,6 @@
 //! settings for 5 seconds before going back to the menu.
 
 use crate::AppState;
-use bevy::a11y::accesskit::Size;
 use bevy::app::AppExit;
 use bevy::core_pipeline::clear_color::ClearColorConfig;
 use bevy::ecs::schedule::ScheduleLabel;
@@ -31,7 +30,7 @@ pub fn setup(mut commands: Commands) {
 }
 
 mod splash {
-    use bevy::{a11y::accesskit::Size, prelude::*};
+    use bevy::prelude::*;
 
     use crate::components::AppState;
 
