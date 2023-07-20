@@ -30,10 +30,10 @@ fn main() {
                 .set(ImagePlugin::default_nearest()),
         )
         .add_state::<AppState>()
-        .add_plugins(WorldInspectorPlugin::new())
         // .add_plugins(EguiPlugin)
-        .add_plugins(StateMachinePlugin)
         .add_plugins((
+            WorldInspectorPlugin::new(),
+            StateMachinePlugin,
             LoadingPlugin,
             menu::MenuPlugin,
             collision::CollisionPlugin,
