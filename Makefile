@@ -6,11 +6,11 @@ dev:
 bind-wasm:
 	wasm-bindgen --out-name aurora \
   --out-dir wasm/target \
-  --target web target/wasm32-unknown-unknown/release/aurora.wasm
+  --target web target/wasm32-unknown-unknown/wasm-release/aurora.wasm
 
 .PHONY build-wasm:
 build-wasm:
-	cargo build --release --target wasm32-unknown-unknown
+	cargo build --profile wasm-release --target wasm32-unknown-unknown
 
 .PHONY run-wasm:
 run-wasm:
