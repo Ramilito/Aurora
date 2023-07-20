@@ -4,11 +4,14 @@ pub struct CollisionPlugin;
 
 impl Plugin for CollisionPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins(RapierPhysicsPlugin::<NoUserData>::default());
-        if cfg!(debug_assertions) {
-            println!("Debugging enabled");
-            app.add_plugins(RapierDebugRenderPlugin::default());
-        }
+        app.add_plugins((
+            RapierPhysicsPlugin::<NoUserData>::default(),
+            RapierDebugRenderPlugin::default(),
+        ));
+
+        // if cfg!(debug_assertions) {
+        // app.add_plugins(RapierDebugRenderPlugin::default());
+        // }
     }
 }
 
