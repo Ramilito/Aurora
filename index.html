@@ -1,5 +1,7 @@
 <html>
   <head>
+		<link data-trunk rel="rust" data-wasm-opt="z" data-weak-refs/>
+		<link data-trunk rel="copy-dir" href="/assets"/>
     <meta charset="UTF-8" />
     <style>
       body {
@@ -20,8 +22,4 @@
       }
     </style>
   </head>
-  <script type="module">
-    import init from './wasm/target/aurora.js'
-    init()
-  </script>
 </html>

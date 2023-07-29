@@ -9,7 +9,7 @@ bevy-inspector-egui = { git = "https://github.com/jakobhellermann/bevy-inspector
 bevy_asset_loader = {git = "https://github.com/NiklasEi/bevy_asset_loader.git", branch = "bevy_main"}
 bevy_egui = "0.21.0"
 bevy_panorbit_camera = { git = "https://github.com/Plonq/bevy_panorbit_camera.git" }
-bevy_rapier3d = { version = "*", features = [ "debug-render-3d" ] }
+bevy_rapier3d = { version = "*"}
 seldom_state = "0.7"
 bevy_gltf_collider = {git = "https://github.com/Ramilito/bevy_gltf_collider.git"}
 # kayak_ui = { version = "0.4.1" }
@@ -32,10 +32,11 @@ opt-level = 3
 [profile.dev.package.bevy_rapier3d]
 opt-level = 3
 
-
-[profile.wasm-release]
-inherits = "release"
+[profile.release]
 opt-level = "z"
 lto = "fat"
 codegen-units = 1
+
+[profile.wasm-release]
+inherits = "release"
 

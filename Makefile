@@ -18,3 +18,7 @@ run-wasm:
 
 .PHONY build:
 build: build-wasm bind-wasm
+
+.PHONY run:
+run:
+	trunk serve --open --release
