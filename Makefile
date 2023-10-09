@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+
 .PHONY dev:
 dev:
 	cargo watch -w src -x run
@@ -22,3 +24,11 @@ build: build-wasm bind-wasm
 .PHONY run:
 run:
 	trunk build --release && trunk serve --open
+
+.ONESHELL:
+.PHONY run-wsl:
+run-wsl:
+	@echo run-wsl
+	mkdir -p ./target/x86_64-pc-windows-gnu/debug/assets
+	rsync ./assets ./target/x86_64-pc-windows-gnu/debug -r --exclude-from=.gitignore
+	cargo run --target x86_64-pc-windows-gnu
