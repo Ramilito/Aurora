@@ -29,6 +29,7 @@ run:
 .PHONY run-wsl:
 run-wsl:
 	@echo run-wsl
+	cargo build --target x86_64-pc-windows-gnu
 	mkdir -p ./target/x86_64-pc-windows-gnu/debug/assets
 	rsync ./assets ./target/x86_64-pc-windows-gnu/debug -r --exclude-from=.gitignore
 	cargo run --target x86_64-pc-windows-gnu
