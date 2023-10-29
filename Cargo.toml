@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bevy = { version = "0.11.0", features=["jpeg"] }
+bevy = { version = "0.11.3", features=["jpeg"] }
 bevy-inspector-egui = { git = "https://github.com/jakobhellermann/bevy-inspector-egui.git" }
 bevy_asset_loader = {git = "https://github.com/NiklasEi/bevy_asset_loader.git", branch = "bevy_main"}
 bevy_egui = "0.21.0"
